@@ -1,1 +1,1 @@
-# rateMyProfessor
+# rateMyLandlord
