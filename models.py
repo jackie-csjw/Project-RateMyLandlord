@@ -21,22 +21,38 @@ def get_username():
 
 
 db.define_table(
-    'account',
+    'renter_account',
     # TODO_complete: define the fields that are in the json.
     Field('account_username', default=get_username),
-    Field('account_password', requires=IS_NOT_EMPTY()),
-    Field('account_type', default='student'),
-    Field('account_type', requires=IS_NOT_EMPTY()),
+    # Field('account_password', requires=IS_NOT_EMPTY()), # get from auth.user
+    Field('account_type', default='renter'),
     Field('account_email', default=get_user_email),
 )
 
-db.account.account_type.readable = db.account.account_type.writable = False
-db.account.account_username.readable = db.account.account_username.writable = False
+db.renter_account.account_type.readable = db.renter_account.account_type.writable = False
+db.renter_account.account_username.readable = db.renter_account.account_username.writable = False
+
+
+db.define_table(
+    'landlord_account',
+    # TODO_complete: define the fields that are in the json.
+    Field('account_username', default=get_username),
+    Field('account_first_name', requires=IS_NOT_EMPTY(error_message=T('Please enter a name'))),
+    Field('account_last_name', requires=IS_NOT_EMPTY(error_message=T('Please enter a name'))),
+    # Field('account_password', requires=IS_NOT_EMPTY()), # get from auth.user
+    Field('account_type', default='landlord'),
+    Field('account_email', default=get_user_email),
+)
+
+db.landlord_account.account_type.readable = db.landlord_account.account_type.writable = False
+db.landlord_account.account_username.readable = db.landlord_account.account_username.writable = False
 
 db.define_table(
     'reviews',
     # TODO_complete: define the fields that are in the json.
-    Field('reviews_username', 'reference account', default=get_username),
+    Field('reviews_renters_username', 'reference renter_account', default=get_username),
+    Field('reviews_landlord_first_name', 'reference landlord_account'),
+    Field('reviews_landlord_last_name', 'reference landlord_account'),
     Field('reviews_contents', requires=IS_NOT_EMPTY(error_message=T('Review cannot be empty'))),
     Field('reviews_score_overall', default='0'),
     Field('reviews_score_responsiveness', default='0'),
@@ -57,5 +73,6 @@ db.define_table(
     # Field('username', 'reference account', default=get_username),
     Field('review_id', 'reference reviews'),
 )
+
 
 db.commit()
