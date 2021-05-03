@@ -35,3 +35,16 @@ def index():
     user = auth.get_user()
     message = T("Hello {first_name}".format(**user) if user else "Hello")
     return dict(message=message)
+
+@action('add_review', method=["GET", "POST"])
+@action.uses(db, session, auth.user, 'add_review.html')
+def add_review():
+    form = Form(db.reviews, csrf_session=session, formstyle=FormStyleBulma)
+    if form.accepted:
+        # We simply redirect; the insertion already happened.
+        redirect(URL('index'))
+    # Either this is a GET request, or this is a POST but not accepted = with errors.
+    return dict(form=form)
+
+
+
