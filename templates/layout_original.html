@@ -13,38 +13,39 @@
   <body>
     <header class="has-background-primary">
       <!-- Navigation bar -->
-      <nav class="navbar is-info" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-          <a class="navbar-item" href="[[=URL('index')]]">
-            <h1 class="title">RateMyLandLord</h1>
-          </a>
-      
-          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-          </a>
-        </div>
-      
-        <div id="navbarBasicExample" class="navbar-menu">
-      
-          <div class="navbar-end">
-            <div class="navbar-item">
-              <div class="buttons">
-                <a class="button is-primary" href="[[=URL('auth/register')]]">
-                  <strong>Sign up</strong>
-                </a>
-                <a class="button is-light" href="[[=URL('auth/login')]]">
-                  Log in
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+      <nav>
+        <!-- Logo -->
+        <a href="[[=URL('index')]]">
+          <h1 class="title">RateMyLandLord</h1>
+        </a>
+        <!-- Do not touch this -->
+        <label for="hamburger">☰</label>
+        <input type="checkbox" id="hamburger">
+        <!-- Left menu ul/li -->
+        [[block page_left_menu]][[end]]
+        <!-- Right menu ul/li -->
+        
+
+        <ul>
+          [[if globals().get('user'):]]
+          <li>
+            <a class="navbar-link is-primary">
+              [[=globals().get('user',{}).get('email')]]
+            </a>
+            <ul>
+              <li><a href="[[=URL('auth/profile')]]">Edit Profile</a></li>
+              <li><a href="[[=URL('auth/change_password')]]">Change Password</a></li>
+              <li><a href="[[=URL('auth/logout')]]">Logout</a></li>
+            </ul>
+          </li>
+          [[else:]]
+         <li>
+            <button class="button is-dark navbar-end"><a href="[[=URL('auth/login')]]">Log in</a></button>
+            <button class="button is-dark navbar-end"><a href="[[=URL('auth/login')]]">Sign Up</a></button>
+          </li>
+          [[pass]]
+        </ul> 
       </nav>
-
-
-
     </header>
     <!-- beginning of HTML inserted by extending template -->
     <center>
@@ -58,7 +59,7 @@
       </main>
     </center>
     <!-- end of HTML inserted by extending template -->
-    <footer class="has-background-info padded">
+    <footer class="has-background-primary padded">
       <p>
       </p>
     </footer>
