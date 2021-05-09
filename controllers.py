@@ -35,3 +35,11 @@ def index():
     user = auth.get_user()
     message = T("Hello {first_name}".format(**user) if user else "Hello")
     return dict(message=message)
+
+
+"""
+# FOR TESTING HTML PAGES
+@unauthenticated("review", "review.html")
+def review():
+    return dict()
+"""
