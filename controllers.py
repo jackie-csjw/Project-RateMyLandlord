@@ -28,6 +28,7 @@ Warning: Fixtures MUST be declared with @action.uses({fixtures}) else your app w
 from py4web import action, request, abort, redirect, URL
 from yatl.helpers import A
 from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, flash
+from py4web.utils.form import Form, FormStyleBulma
 
 
 @unauthenticated("index", "index.html")
@@ -37,9 +38,29 @@ def index():
     return dict(message=message)
 
 
-"""
-# FOR TESTING HTML PAGES
-@unauthenticated("review", "review.html")
-def review():
-    return dict()
-"""
+
+@action('add_review', method=["GET", "POST"])
+@action.uses(db, session, auth.user, 'add_review.html')
+def add_review():
+    form = Form(db.reviews, csrf_session=session, formstyle=FormStyleBulma)
+    if form.accepted:
+        # We simply redirect; the insertion already happened.
+        # username = form.vars['reviews_username']
+        # db(db.reviews.reviews_username == username).update(username=username)
+        redirect(URL('index'))
+    # Either this is a GET request, or this is a POST but not accepted = with errors.
+    return dict(form=form)
+
+
+@action('add_review', method=["GET", "POST"])
+@action.uses(db, session, auth.user, 'add_review.html')
+def add_review():
+    form = Form(db.reviews, csrf_session=session, formstyle=FormStyleBulma)
+    if form.accepted:
+        # We simply redirect; the insertion already happened.
+        # username = form.vars['reviews_username']
+        # db(db.reviews.reviews_username == username).update(username=username)
+        redirect(URL('index'))
+    # Either this is a GET request, or this is a POST but not accepted = with errors.
+    return dict(form=form)
+
