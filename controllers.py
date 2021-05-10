@@ -38,7 +38,6 @@ def index():
     return dict(message=message)
 
 
-
 @action('add_review', method=["GET", "POST"])
 @action.uses(db, session, auth.user, 'add_review.html')
 def add_review():
@@ -52,15 +51,15 @@ def add_review():
     return dict(form=form)
 
 
-@action('add_review', method=["GET", "POST"])
-@action.uses(db, session, auth.user, 'add_review.html')
-def add_review():
-    form = Form(db.reviews, csrf_session=session, formstyle=FormStyleBulma)
-    if form.accepted:
-        # We simply redirect; the insertion already happened.
-        # username = form.vars['reviews_username']
-        # db(db.reviews.reviews_username == username).update(username=username)
-        redirect(URL('index'))
-    # Either this is a GET request, or this is a POST but not accepted = with errors.
-    return dict(form=form)
+# @action('add_address', method=["GET", "POST"])
+# @action.uses(db, session, auth.user, 'add_review.html')
+# def add_address():
+#     form = Form(db.reviews, csrf_session=session, formstyle=FormStyleBulma)
+#     if form.accepted:
+#         # We simply redirect; the insertion already happened.
+#         # username = form.vars['reviews_username']
+#         # db(db.reviews.reviews_username == username).update(username=username)
+#         redirect(URL('index'))
+#     # Either this is a GET request, or this is a POST but not accepted = with errors.
+#     return dict(form=form)
 

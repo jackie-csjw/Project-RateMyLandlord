@@ -1,4 +1,31 @@
 [[extend 'layout.html']]
+<html>
+  <head>
+    <title>Place Autocomplete</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<!--    <link rel="stylesheet" type="text/css" href="./style.css" />-->
+<!--    <script src="./index.js"></script>-->
+  </head>
+  <body>
+    <div class="pac-card" id="pac-card">
+      <div id="pac-container">
+        <input id="pac-input" type="text" placeholder="Enter a location" />
+      </div>
+    </div>
+    <div id="map"></div>
+    <div id="infowindow-content">
+      <span id="place-name" class="title"></span><br />
+      <span id="place-address"></span>
+    </div>
+
+    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBd17lZuOHyWRp3Kf2q8czP8pjtJSy7wHA&callback=initMap&libraries=places&v=weekly"
+      async
+    ></script>
+  </body>
+</html>
+
 
 <div class="section">
   <div class="container">
