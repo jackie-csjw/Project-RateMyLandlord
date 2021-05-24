@@ -37,10 +37,6 @@ def index():
     message = T("Hello {first_name}".format(**user) if user else "Hello")
     return dict(message=message)
 
-@unauthenticated("reviews", "reviews.html")
-def reviews():
-    form = Form(db.reviews, csrf_session=session, formstyle=FormStyleBulma)
-    return dict(form=form)
 
 @action('add_review', method=["GET", "POST"])
 @action.uses(db, session, auth.user, 'add_review.html')

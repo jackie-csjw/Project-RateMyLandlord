@@ -52,7 +52,7 @@ db.reviews.reviews_landlord_id.readable = db.reviews.reviews_landlord_id.writabl
 db.reviews.reviews_address_id.readable = db.reviews.reviews_address_id.writable = False
 db.reviews.thumbs_up.readable = db.reviews.thumbs_up.writable = False
 db.reviews.thumbs_down.readable = db.reviews.thumbs_down.writable = False
-
+db.reivews.reviews_property_address.readable = False
 
 # db.define_table(
 #     'address',

@@ -2,10 +2,10 @@
 // and be used to initialize it.
 let app = {};
 
-// set_add_status 
-// add_post
-// reset_form
-// delete_post
+// set_add_status <-- jimmy
+// add_post <-- jackie
+// reset_form <-- jimmy
+// delete_post <-- jackie
 
 
 // Given an empty app object, initializes it filling its attributes,
