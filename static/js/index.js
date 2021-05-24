@@ -2,6 +2,11 @@
 // and be used to initialize it.
 let app = {};
 
+// set_add_status <-- jackie
+// add_post <--  jimmy
+// reset_form <-- jimmy
+// delete_post <-- jackie
+
 
 // Given an empty app object, initializes it filling its attributes,
 // creates a Vue instance, and then initializes the Vue instance.
@@ -10,6 +15,18 @@ let init = (app) => {
     // This is the Vue data.
     app.data = {
         // Complete as you see fit.
+        rows: [],
+        // Form fields
+        review_content: "",
+        location: "",
+        overall_score: "",
+        responsiveness_score: "",
+        friendliness_score: "",
+        // End form fields
+        add_mode: false,
+        can_delete: false,
+    
+
     };
 
     app.enumerate = (a) => {

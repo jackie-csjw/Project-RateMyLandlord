@@ -10,6 +10,10 @@ def get_user_email():
     return auth.current_user.get('email') if auth.current_user else None
 
 
+def get_user():
+    return auth.current_user.get('id') if auth.current_user else None
+
+
 def get_username():
     return auth.current_user.get('username') if auth.current_user else None
 
@@ -52,7 +56,7 @@ db.reviews.reviews_landlord_id.readable = db.reviews.reviews_landlord_id.writabl
 db.reviews.reviews_address_id.readable = db.reviews.reviews_address_id.writable = False
 db.reviews.thumbs_up.readable = db.reviews.thumbs_up.writable = False
 db.reviews.thumbs_down.readable = db.reviews.thumbs_down.writable = False
-
+db.reivews.reviews_property_address.readable = False
 
 # db.define_table(
 #     'address',
