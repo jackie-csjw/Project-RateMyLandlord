@@ -1,6 +1,13 @@
 [[extend 'layout.html']]
 
-<div class="section">
+<style>
+    [v-cloak] {
+         display: none;
+    }
+</style>
+
+
+<div class="section" id="vue-target" v-cloak>
   
     <!--Top Half-->
     <div class="container">
@@ -16,7 +23,7 @@
                 <div class="columns is-mobile">
                 <div class="column">
                     <!--Rating titles-->
-                    <p class="bd-notification is-info">Overall: </p>
+                    <p class="bd-notification is-info">Overall:  </p>
                     <p class="bd-notification is-info">Responsiveness: </p>
                     <p class="bd-notification is-info">Friendliness: </p>
                 </div>
@@ -31,6 +38,43 @@
         </div>
 
         <button class="button is-success">Leave a review</button>
+
+        <!--Add review-->
+        <div class="container block">
+
+            <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+            <script type="text/javascript"
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBd17lZuOHyWRp3Kf2q8czP8pjtJSy7wHA&libraries=places"></script>
+            <script>
+                function initialize() {
+                var input = document.getElementById('searchTextField');
+                var autocomplete = new google.maps.places.Autocomplete(input);
+                    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                        var place = autocomplete.getPlace();
+                        document.getElementById('city2').value = place.name;
+                        document.getElementById('cityLat').value = place.geometry.location.lat();
+                        document.getElementById('cityLng').value = place.geometry.location.lng();
+                    });
+                }
+                google.maps.event.addDomListener(window, 'load', initialize);
+            </script>
+
+
+            <div class="pac-card" id="pac-card">
+                <div id="pac-container">
+                  <input id="searchTextField" type="text" size="50" placeholder="Enter a location" autocomplete="on" runat="server" />
+                  <input type="hidden" id="city2" name="city2" />
+                  <input type="hidden" id="cityLat" name="cityLat" />
+                  <input type="hidden" id="cityLng" name="cityLng" />
+                </div>
+              </div>
+
+            [[=form]]
+
+        </div>
+        <!--End add review-->
+
     </div>
     <hr>
     <!--Bottom Half-->
