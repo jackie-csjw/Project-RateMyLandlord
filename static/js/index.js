@@ -2,8 +2,8 @@
 // and be used to initialize it.
 let app = {};
 
-// set_add_status <-- jimmy
-// add_post <-- jackie
+// set_add_status <-- jackie
+// add_post <--  jimmy
 // reset_form <-- jimmy
 // delete_post <-- jackie
 
