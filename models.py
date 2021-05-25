@@ -23,11 +23,19 @@ def get_username():
 #
 ## always commit your models to avoid problems later
 
+db.define_table(
+    'landlord',
+    # TODO_complete: define the fields that are in the json.
+    Field('landlord_auth_id', 'reference auth_user'),
+    Field('first_name', requires=IS_NOT_EMPTY(error_message=T('Please enter a first name'))),
+    Field('last_name', requires=IS_NOT_EMPTY(error_message=T('Please enter a last name'))),
+)
+
 
 db.define_table(
     'address',
     # TODO_complete: define the fields that are in the json.
-    Field('reviews_landlord_id', 'reference auth_user'),
+    Field('reviews_landlord_id', 'reference landlord'),
     Field('address_property_address', requires=IS_NOT_EMPTY(error_message=T('Property Address Required'))),
 )
 
@@ -40,7 +48,7 @@ db.define_table(
     # TODO_complete: define the fields that are in the json.
     Field('reviews_renters_id', 'reference auth_user'),
     Field('renter_email'),
-    Field('reviews_landlord_id', 'reference auth_user'),
+    Field('reviews_landlord_id', 'reference landlord'),
     Field('reviews_address_id', 'reference address'),
     Field('reviews_contents', requires=IS_NOT_EMPTY(error_message=T('Review cannot be empty'))),
     Field('reviews_score_overall', default='0'),
