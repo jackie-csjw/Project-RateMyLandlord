@@ -61,7 +61,7 @@ let init = (app) => {
             }).then(function (response) {
             app.vue.rows.push({
                 id: response.data.id,
-                content: app.vue.reviews_contents,
+                reviews_contents: response.data.reviews_contents,
                 reviews_property_address: response.data.reviews_property_address,
                 reviews_score_responsiveness: response.data.reviews_score_responsiveness,
                 reviews_score_friendliness: response.data.reviews_score_friendliness,

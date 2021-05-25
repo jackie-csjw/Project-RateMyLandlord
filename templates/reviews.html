@@ -56,10 +56,10 @@
                 <label for="review_content">Review</label>
                 <textarea class="textarea" v-model="reviews_contents"></textarea>
 
-                <label for="rep_scale">Responsiveness (0-10): <label for="rep_scale" id="rep_scale_output">{{r_value}}</label> </label>
+                <label for="rep_scale">Responsiveness (0-10): <label for="rep_scale" id="rep_scale_output">{{r_value}}</label> <label for="rep_scale" id="rep_scale_output">/10</label></label>
                 <input id="rep_scale" class="input block" type="range" min="0" max="10" v-model="reviews_score_responsiveness" @change="change_r_value">
 
-                <label for="friend_scale">Friendliness (0-10): <label for="friend_scale" id="friend_scale_output">{{f_value}}</label></label>
+                <label for="friend_scale">Friendliness (0-10): <label for="friend_scale" id="friend_scale_output">{{f_value}}</label><label for="friend_scale" id="rep_scale_output">/10</label></label>
                 <input id="friend_scale" class="input block" type="range" min="0" max="10" v-model="reviews_score_friendliness" @change="change_f_value">
             </div>
 

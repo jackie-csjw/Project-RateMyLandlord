@@ -79,7 +79,8 @@ def add_reviews():
     reviews_score_responsiveness=int(request.json.get('reviews_score_responsiveness'))
     reviews_property_address=request.json.get('reviews_property_address')
     reviews_score_overall=(reviews_score_friendliness+reviews_score_responsiveness)/2
-    
+    reviews_contents=request.json.get('reviews_contents')
+
     id = db.reviews.insert(
         reviews_renters_id=renter_id,
         renter_email = renter_email,
@@ -101,6 +102,7 @@ def add_reviews():
         reviews_score_friendliness = reviews_score_friendliness,
         reviews_property_address= reviews_property_address,
         reviews_score_overall = reviews_score_overall,
+        reviews_contents = reviews_contents,
     )
 
 
