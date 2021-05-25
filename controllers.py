@@ -49,7 +49,7 @@ def index():
     message = T("Hello {first_name}".format(**user) if user else "Hello")
     return dict(
         message=message,
-        # load_reviews_url=URL('load_reviews', signer=url_signer),
+        load_reviews_url=URL('load_reviews', signer=url_signer),
         add_reviews_url=URL('add_reviews', signer=url_signer),
         delete_reviews_url=URL('delete_reviews', signer=url_signer),
         # get_thumbs_up_url=URL('get_thumbs_up', signer=url_signer),
@@ -70,14 +70,16 @@ def load_reviews():
 
 
 @action('add_reviews', method="POST")
-@action.uses(url_signer.verify(), db)
+@action.uses(url_signer.verify(), db, auth, auth.user)
 def add_reviews():
     renter = db(db.auth_user.email == get_user_email()).select().first()
     renter_id = renter.id if renter is not None else "Unknown"
+    renter_email = renter.email
     reviews_score_friendliness=int(request.json.get('reviews_score_friendliness'))
     reviews_score_responsiveness=int(request.json.get('reviews_score_responsiveness'))
     id = db.reviews.insert(
         reviews_renters_id=renter_id,
+        renter_email = renter_email,
         # reviews_landlord_id=request.json.get('reviews_landlord_id'),
         # reviews_address_id=request.json.get('reviews_address_id'),
         reviews_contents=request.json.get('reviews_contents'),
@@ -88,7 +90,7 @@ def add_reviews():
         # thumbs_up=request.json.get('thumbs_up'),
         # thumbs_down=request.json.get('thumbs_down'),
     )
-    return dict(id=id, renter_id=renter_id)
+    return dict(id=id, renter_id=renter_id, renter_email=renter_email)
 
 
 @action('delete_reviews')
@@ -97,7 +99,7 @@ def delete_reviews():
     id = request.params.get('id')
     assert id is not None
     db(db.reviews.id == id).delete()
-    return "ok"
+    return "--REVIEW DELETED--"
 
 # @action("signup", method=["GET", "POST"])
 # @action.uses(db, session, auth, 'signup.html')
@@ -132,6 +134,7 @@ def add_review():
     return dict(
         load_reviews_url = URL('load_reviews', signer=url_signer),
         add_reviews_url = URL('add_reviews', signer=url_signer),
+        delete_reviews_url = URL('delete_reviews', signer=url_signer),
     )
 
 

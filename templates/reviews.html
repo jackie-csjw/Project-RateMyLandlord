@@ -40,33 +40,33 @@
         <button class="button is-success block" @click="set_add_status(true)">Leave a review</button>
 
         <!--Add review-->
-        <div class="container block">
+        <div v-if="add_mode" class="container block">
 
             <!--Location thing-->
             <div class="pac-card block" id="pac-card">
                 <div id="pac-container">
-                    <label for="searchTextField" >Property Address</label>
+                    <label for="searchTextField">Property Address</label>
                     <input id="searchTextField" type="text" size="50" placeholder="Enter a location" autocomplete="on" runat="server" v-model="reviews_property_address" />
                     <input type="hidden" id="city2" name="city2" />
                     <input type="hidden" id="cityLat" name="cityLat" />
                     <input type="hidden" id="cityLng" name="cityLng" />
                 </div>
             </div>
-
-
             <div class="container block">
                 <label for="review_content">Review</label>
-                <textarea class="textarea is-small block" v-model="reviews_contents"></textarea>
-                <label for="rep_scale">Responsiveness (0-10): <label for="rep_scale" id="rep_scale_output"></label></label>
-                <input id="rep_scale" class="input block" type="range" min="0" max="10" v-model="reviews_score_responsiveness">
-                <label for="friend_scale">Friendliness (0-10): <label for="friend_scale" id="friend_scale_output"></label></label>
-                <input id="friend_scale" class="input block" type="range" min="0" max="10" v-model="reviews_score_friendliness">
+                <textarea class="textarea" v-model="reviews_contents"></textarea>
+
+                <label for="rep_scale">Responsiveness (0-10): <label for="rep_scale" id="rep_scale_output">{{r_value}}</label> </label>
+                <input id="rep_scale" class="input block" type="range" min="0" max="10" v-model="reviews_score_responsiveness" @change="change_r_value">
+
+                <label for="friend_scale">Friendliness (0-10): <label for="friend_scale" id="friend_scale_output">{{f_value}}</label></label>
+                <input id="friend_scale" class="input block" type="range" min="0" max="10" v-model="reviews_score_friendliness" @change="change_f_value">
             </div>
 
            <!--Reinput ==form here if necessary-->
-           
-           <button class="button is-success" @click="add_post">Submit</button>
-           <button class="button is-warning" @click="set_add_status(false)">Cancel</button>
+    
+           <input type ="submit" class="button is-success" @click="add_post" value="Submit">
+           <input type ="submit" class="button is-warning" @click="set_add_status(false)" value="Cancel">
 
 
         </div>
@@ -78,7 +78,7 @@
     <div class="container">
        
         <!--Each review is a section-->
-        <div class="section has-background-info-light" v-for="r in rows.slice().reverse()">
+        <div class="section has-background-info-light block" v-for="r in rows.slice().reverse()">
             <div class="columns is-mobile is-gapless is-vcentered">
                 <div class="column is-one-fifth">
                     
@@ -101,8 +101,11 @@
                         <span class="icon p-5">
                             <i class="fas fa-thumbs-down"></i>
                         </span>
+                        <button @click="delete_post(r._idx)" class="button is-danger" v-if="r.renter_email == '[[=globals().get('user').get('email')]]'" style="float: right;">
+                            <i class="fa fa-trash"></i>
+                        </button>
                     </div>
-
+                    <!--v-if="r.renter_email == '[[=globals().get('user').get('email')]]'"-->
                 
                 </div>
 
@@ -118,42 +121,12 @@
 
 [[block page_scripts]]
 
-<script src="js/index.js"></script>
-<script>
-    var slider1 = document.getElementById("rep_scale");
-    var slider2 = document.getElementById("friend_scale");
-    var output1 = document.getElementById("rep_scale_output");
-    var output2 = document.getElementById("friend_scale_output");
-    output1.innerHTML = slider1.value;
-    output2.innerHTML = slider2.value;
-    
-    slider1.oninput = function() {
-      output1.innerHTML = this.value;
-    }
-    slider2.oninput = function() {
-      output2.innerHTML = this.value;
-    }
-</script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-
-            <script type="text/javascript"
-                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBd17lZuOHyWRp3Kf2q8czP8pjtJSy7wHA&libraries=places"></script>
-            <script>
-                function initialize() {
-                var input = document.getElementById('searchTextField');
-                var autocomplete = new google.maps.places.Autocomplete(input);
-                    google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                        var place = autocomplete.getPlace();
-                        document.getElementById('city2').value = place.name;
-                        document.getElementById('cityLat').value = place.geometry.location.lat();
-                        document.getElementById('cityLng').value = place.geometry.location.lng();
-                    });
-                }
-                google.maps.event.addDomListener(window, 'load', initialize);
-</script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBd17lZuOHyWRp3Kf2q8czP8pjtJSy7wHA&libraries=places"></script>
 <script>
     let add_reviews_url = "[[=XML(add_reviews_url)]]";
     let load_reviews_url = "[[=XML(load_reviews_url)]]";
+    let delete_reviews_url = "[[=XML(delete_reviews_url)]]";
 </script>
-
+<script src="js/reviews.js"></script>
 [[end]]

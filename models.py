@@ -39,6 +39,7 @@ db.define_table(
     'reviews',
     # TODO_complete: define the fields that are in the json.
     Field('reviews_renters_id', 'reference auth_user'),
+    Field('renter_email'),
     Field('reviews_landlord_id', 'reference auth_user'),
     Field('reviews_address_id', 'reference address'),
     Field('reviews_contents', requires=IS_NOT_EMPTY(error_message=T('Review cannot be empty'))),
