@@ -54,7 +54,6 @@ let init = (app) => {
         axios.post(add_reviews_url,
             {
                 reviews_contents: app.vue.reviews_contents,
-                //reviews_score_overall: app.vue.reviews_score_overall,
                 reviews_score_responsiveness: app.vue.reviews_score_responsiveness,
                 reviews_score_friendliness: app.vue.reviews_score_friendliness,
                 reviews_property_address: app.vue.reviews_property_address
@@ -63,10 +62,12 @@ let init = (app) => {
             app.vue.rows.push({
                 id: response.data.id,
                 content: app.vue.reviews_contents,
-                prop_address: app.vue.reviews_property_address,
-                score_responsiveness: app.vue.reviews_score_responsiveness,
-                score_friendliness: app.vue.reviews_score_friendliness,
+                reviews_property_address: response.data.reviews_property_address,
+                reviews_score_responsiveness: response.data.reviews_score_responsiveness,
+                reviews_score_friendliness: response.data.reviews_score_friendliness,
                 renter_email: response.data.renter_email,
+                reviews_score_overall: response.data.reviews_score_overall,
+                
             });
             app.enumerate(app.vue.rows);
             app.reset_form();

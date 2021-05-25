@@ -77,6 +77,9 @@ def add_reviews():
     renter_email = renter.email
     reviews_score_friendliness=int(request.json.get('reviews_score_friendliness'))
     reviews_score_responsiveness=int(request.json.get('reviews_score_responsiveness'))
+    reviews_property_address=request.json.get('reviews_property_address')
+    reviews_score_overall=(reviews_score_friendliness+reviews_score_responsiveness)/2
+    
     id = db.reviews.insert(
         reviews_renters_id=renter_id,
         renter_email = renter_email,
@@ -90,7 +93,15 @@ def add_reviews():
         # thumbs_up=request.json.get('thumbs_up'),
         # thumbs_down=request.json.get('thumbs_down'),
     )
-    return dict(id=id, renter_id=renter_id, renter_email=renter_email)
+    return dict(
+        id=id, 
+        renter_id=renter_id, 
+        renter_email=renter_email,
+        reviews_score_responsiveness=reviews_score_responsiveness,
+        reviews_score_friendliness = reviews_score_friendliness,
+        reviews_property_address= reviews_property_address,
+        reviews_score_overall = reviews_score_overall,
+    )
 
 
 @action('delete_reviews')
