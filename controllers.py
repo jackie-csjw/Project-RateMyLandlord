@@ -74,15 +74,17 @@ def load_reviews():
 def add_reviews():
     renter = db(db.auth_user.email == get_user_email()).select().first()
     renter_id = renter.id if renter is not None else "Unknown"
+    reviews_score_friendliness=int(request.json.get('reviews_score_friendliness'))
+    reviews_score_responsiveness=int(request.json.get('reviews_score_responsiveness'))
     id = db.reviews.insert(
         reviews_renters_id=renter_id,
         # reviews_landlord_id=request.json.get('reviews_landlord_id'),
         # reviews_address_id=request.json.get('reviews_address_id'),
         reviews_contents=request.json.get('reviews_contents'),
-        reviews_score_overall=request.json.get('reviews_score_overall'),
         reviews_score_responsiveness=request.json.get('reviews_score_responsiveness'),
         reviews_score_friendliness=request.json.get('reviews_score_friendliness'),
         reviews_property_address=request.json.get('reviews_property_address'),
+        reviews_score_overall=(reviews_score_friendliness+reviews_score_responsiveness)/2,
         # thumbs_up=request.json.get('thumbs_up'),
         # thumbs_down=request.json.get('thumbs_down'),
     )
@@ -126,8 +128,11 @@ def delete_reviews():
 @action('reviews', method=["GET", "POST"])
 @action.uses(db, session, auth.user, 'reviews.html')
 def add_review():
-
-    return dict()
+    
+    return dict(
+        load_reviews_url = URL('load_reviews', signer=url_signer),
+        add_reviews_url = URL('add_reviews', signer=url_signer),
+    )
 
 
 # @action('add_address', method=["GET", "POST"])
