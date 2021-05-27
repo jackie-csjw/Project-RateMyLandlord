@@ -46,7 +46,7 @@
             <div class="pac-card block" id="pac-card">
                 <div id="pac-container">
                     <label for="searchTextField">Property Address</label>
-                    <input id="searchTextField" type="text" size="50" placeholder="Enter a location" autocomplete="on" runat="server" v-model="reviews_property_address" />
+                    <input id="searchTextField" type="text" size="50" placeholder="Street, City, State, ZIP" autocomplete="on" runat="server" v-model="reviews_property_address" />
                     <input type="hidden" id="city2" name="city2" />
                     <input type="hidden" id="cityLat" name="cityLat" />
                     <input type="hidden" id="cityLng" name="cityLng" />
@@ -129,4 +129,5 @@
     let delete_reviews_url = "[[=XML(delete_reviews_url)]]";
 </script>
 <script src="js/reviews.js"></script>
+
 [[end]]

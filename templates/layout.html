@@ -26,6 +26,19 @@
       
           <div class="navbar-end">
             <div class="navbar-item">
+              [[if globals().get('user'):]]
+                <div class="navbar-item has-dropdown is-hoverable">
+                  <a class="navbar-link is-primary">
+                    [[=globals().get('user').get('email')]]
+                  </a>
+                  <div class="navbar-dropdown">
+                    <a class="navbar-item" href="[[=URL('auth/logout')]]">Logout</a>
+                    <a class="navbar-item" href="[[=URL('auth/profile')]]">Profile</a>
+                    <a class="navbar-item" href="[[=URL('auth/change_password')]]">Change Password</a></li>
+
+                  </div>
+                </div>
+                [[else:]]
               <div class="buttons">
                 <a class="button is-primary is-active is-rounded" href="[[=URL('auth/register')]]" style="font-family:'Gill Sans', sans-serif">
                   Sign up
@@ -33,6 +46,7 @@
                 <a class="button is-light is-rounded" href="[[=URL('auth/login')]]" style="font-family:'Gill Sans', sans-serif">
                   Log in
                 </a>
+                [[pass]]
               </div>
             </div>
           </div>

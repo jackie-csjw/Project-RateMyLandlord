@@ -42,7 +42,7 @@ url_signer = URLSigner(session)
 @action('index')
 @action.uses(db, 'index.html')
 def index():
-    auth = Auth(extra_fields=[
+    auth = Auth(session, db, extra_fields=[
         Field('user_type', requires=IS_IN_SET("Renter", "Landlord"))
     ])
     user = auth.get_user()
@@ -68,6 +68,31 @@ def load_reviews():
     email = auth.get_user()['email']
     return dict(rows=rows, email=email)
 
+@action('dashboard_landlord')
+@action.uses(url_signer.verify(), db)
+def dashboard_landlord():
+
+    return dict()
+
+@action('dashboard_user')
+@action.uses(db, session, auth.user, 'dashboard_user.html')
+def dashboard_user():
+
+    return dict(
+        load_reviews_url = URL('load_reviews', signer=url_signer),
+        add_reviews_url = URL('add_reviews', signer=url_signer),
+        delete_reviews_url = URL('delete_reviews', signer=url_signer),
+    )
+
+@action('reviews', method=["GET", "POST"])
+@action.uses(db, session, auth.user, 'reviews.html')
+def add_review():
+    
+    return dict(
+        load_reviews_url = URL('load_reviews', signer=url_signer),
+        add_reviews_url = URL('add_reviews', signer=url_signer),
+        delete_reviews_url = URL('delete_reviews', signer=url_signer),
+    )
 
 @action('add_reviews', method="POST")
 @action.uses(url_signer.verify(), db, auth, auth.user)
@@ -140,15 +165,7 @@ def delete_reviews():
 #     return dict(form=form)
 
 
-@action('reviews', method=["GET", "POST"])
-@action.uses(db, session, auth.user, 'reviews.html')
-def add_review():
-    
-    return dict(
-        load_reviews_url = URL('load_reviews', signer=url_signer),
-        add_reviews_url = URL('add_reviews', signer=url_signer),
-        delete_reviews_url = URL('delete_reviews', signer=url_signer),
-    )
+
 
 
 # @action('add_address', method=["GET", "POST"])

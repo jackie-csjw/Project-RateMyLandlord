@@ -1,5 +1,12 @@
 [[extend 'layout.html']]
-<div class="section">
+<style>
+  [v-cloak] {
+       display: none;
+  }
+</style>
+
+<div class="section" id="vue-target" v-cloak>
+  <div class="section">
 
     <div class="columns">
         <div class="column">
@@ -19,22 +26,21 @@
       <h1 class=" title is-4" style="text-align: center;">Your Reviews</h1>
 
       <!--Each review is a section-->
-      <div class="section has-background-info-light">
+      <div class="section has-background-info-light block" v-if="r.renter_email == '[[=globals().get('user').get('email')]]'" v-for="r in rows.slice().reverse()">
         <div class="columns is-mobile is-gapless is-vcentered">
             <div class="column is-one-fifth">
                 
-               <span class="title p-5">10/10</span>
-
+               <span class="title p-5">{{r.reviews_score_overall}}</span>
 
             </div>
             <div class="column">
-                <span class="p-3">Property: <strong>157 Franklin St</strong></span>
-                <span class="p-3">Responsiveness: <strong>10/10</strong></span>
-                <span class="p-3">Friendliness: <strong>10/10</strong></span>
-                <span class="p-3">Would Rent Again: <strong>Yes</strong></span>
+                <span class="p-3">Property: <strong>{{r.reviews_property_address}}</strong></span>
+                <span class="p-3">Responsiveness: <strong>{{r.reviews_score_responsiveness}}</strong></span>
+                <span class="p-3">Friendliness: <strong>{{r.reviews_score_friendliness}}</strong></span>
+               <!-- <span class="p-3">Would Rent Again: <strong>Yes</strong></span> --> 
                
                 <div class="section">
-                    <p>Would recommend to anyone looking for a rental. They are quick and responsive to service requests and always call before coming in.</p>
+                    <p>{{r.reviews_contents}}</p>
                     <br>
                     <span class="icon">
                         <i class="fas fa-thumbs-up"></i>
@@ -42,15 +48,24 @@
                     <span class="icon p-5">
                         <i class="fas fa-thumbs-down"></i>
                     </span>
+                    <button @click="delete_post(r._idx)" class="button is-danger" v-if="r.renter_email == '[[=globals().get('user').get('email')]]'" style="float: right;">
+                        <i class="fa fa-trash"></i>
+                    </button>
                 </div>
-
-            
             </div>
-
         </div>
-
-
     </div>
-    
+  </div>
 
 </div>
+
+
+[[block page_scripts]]
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBd17lZuOHyWRp3Kf2q8czP8pjtJSy7wHA&libraries=places"></script>
+<script>
+    let load_reviews_url = "[[=XML(load_reviews_url)]]";
+    let delete_reviews_url = "[[=XML(delete_reviews_url)]]";
+</script>
+<script src="js/dashboard_user.js"></script>
+[[end]]
