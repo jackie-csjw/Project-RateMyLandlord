@@ -84,19 +84,40 @@ def dashboard_user():
         delete_reviews_url = URL('delete_reviews', signer=url_signer),
     )
 
+
+""" previous version
 @action('reviews', method=["GET", "POST"])
 @action.uses(db, session, auth.user, 'reviews.html')
-def add_review():
+def reviews():
     
     return dict(
         load_reviews_url = URL('load_reviews', signer=url_signer),
         add_reviews_url = URL('add_reviews', signer=url_signer),
         delete_reviews_url = URL('delete_reviews', signer=url_signer),
     )
+"""
 
-@action('add_reviews', method="POST")
+@action('reviews/<landlord_id:int>', method=["GET", "POST"])
+@action.uses(db, session, auth.user, 'reviews.html')
+def reviews(landlord_id=None):
+    assert landlord_id is not None
+    landlord = db.landlord[landlord_id]
+    landlord_name = landlord.first_name + " " + landlord.last_name
+
+    return dict(
+        landlord_name = landlord_name,
+        load_reviews_url = URL('load_reviews', signer=url_signer),
+        add_reviews_url = URL('add_reviews', signer=url_signer),
+        delete_reviews_url = URL('delete_reviews', signer=url_signer),
+    )
+
+@action('add_reviews', method=["GET", "POST"])
 @action.uses(url_signer.verify(), db, auth, auth.user)
 def add_reviews():
+    #assert landlord_id is not None
+    #landlord = db.landlord[landlord_id]
+    
+
     renter = db(db.auth_user.email == get_user_email()).select().first()
     renter_id = renter.id if renter is not None else "Unknown"
     renter_email = renter.email
@@ -107,6 +128,7 @@ def add_reviews():
     reviews_contents=request.json.get('reviews_contents')
 
     id = db.reviews.insert(
+        #reviews_landlord_id = landlord.id,
         reviews_renters_id=renter_id,
         renter_email = renter_email,
         # reviews_landlord_id=request.json.get('reviews_landlord_id'),
@@ -138,6 +160,16 @@ def delete_reviews():
     assert id is not None
     db(db.reviews.id == id).delete()
     return "--REVIEW DELETED--"
+
+
+@action('add_landlord', method=["GET", "POST"])
+@action.uses(db, session, auth.user, 'add_landlord.html')
+def add_landlord():
+    form = Form(db.landlord, csrf_session=session, formstyle=FormStyleBulma)
+    if form.accepted:
+        ## CODE TO CREATE URL FOR REVIEW PAGE HERE
+        redirect(URL('index')) # change this later to redirect to landlord page
+    return dict(form=form)
 
 # @action("signup", method=["GET", "POST"])
 # @action.uses(db, session, auth, 'signup.html')

@@ -26,11 +26,13 @@ def get_username():
 db.define_table(
     'landlord',
     # TODO_complete: define the fields that are in the json.
-    Field('landlord_auth_id', 'reference auth_user'),
+    #Field('landlord_auth_id', 'reference auth_user'),
     Field('first_name', requires=IS_NOT_EMPTY(error_message=T('Please enter a first name'))),
     Field('last_name', requires=IS_NOT_EMPTY(error_message=T('Please enter a last name'))),
 )
 
+#db.landlord.landlord_auth_id.writeable = False
+#db.landlord.landlord_auth_id.readable = False
 
 db.define_table(
     'address',
