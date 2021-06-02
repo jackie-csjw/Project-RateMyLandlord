@@ -34,7 +34,7 @@ from .common import db, session, T, cache, auth, logger, authenticated, unauthen
 from py4web.utils.form import Form, FormStyleBulma
 from py4web.utils.url_signer import URLSigner
 from .models import get_user_email, get_user
-
+import random
 url_signer = URLSigner(session)
 
 
@@ -48,14 +48,22 @@ def index():
     user = auth.get_user()
     message = T("Hello {first_name}".format(**user) if user else "Hello")
 
-    example_landlord1 = db.landlord[1]
+    landlord_count = db(db.landlord).count()
+    print(landlord_count)
+    if(landlord_count > 1):
+        random_landlords = random.sample(range(1, landlord_count+1), 2)
+    else: # if there is only one landlord populate page with the only landlord twice
+        random_landlords = [1, 1]
+    print(random_landlords)
+
+    example_landlord1 = db.landlord[random_landlords[0]]
     example_landlord1_name = example_landlord1.first_name + " " + example_landlord1.last_name
     rows1 = db(
         (db.reviews.reviews_landlordID == 1)
     ).select().first()
 
 
-    example_landlord2 = db.landlord[2]
+    example_landlord2 = db.landlord[random_landlords[1]]
     example_landlord2_name = example_landlord2.first_name + " " + example_landlord2.last_name
     rows2 = db(
         (db.reviews.reviews_landlordID == 2)
