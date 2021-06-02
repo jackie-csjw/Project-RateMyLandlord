@@ -103,8 +103,37 @@ def reviews(landlord_id=None):
     assert landlord_id is not None
     landlord = db.landlord[landlord_id]
     landlord_name = landlord.first_name + " " + landlord.last_name
+    landlordID = landlord_id
+    session['landlordID'] = landlord_id
+    """
+    rows = db(
+        (db.landlord.id == landlord_id),
+        (db.reviews.reviews_landlordID == landlord_id)
+    ).select() # as list
 
+    num_rows = db(
+        (db.landlord.id == landlord_id),
+        (db.reviews.reviews_landlordID == landlord_id)
+    ).count()
+
+    avg_overall = 0;
+    avg_friend = 0;
+    avg_resp = 0;
+
+    for r in rows:
+        avg_overall += r.reviews_score_overall
+        avg_friend += r.reviews_score_friendliness
+        avg_resp += r.reviews_score_responsiveness
+    
+    avg_overall = avg_overall/num_rows
+    avg_friend = avg_friend/num_rows
+    avg_resp = avg_resp/num_rows
+    """
     return dict(
+        #avg_overall = avg_overall,
+        #avg_friend = avg_friend,
+        #avg_resp = avg_resp,
+        landlordID = landlordID,
         landlord_name = landlord_name,
         load_reviews_url = URL('load_reviews', signer=url_signer),
         add_reviews_url = URL('add_reviews', signer=url_signer),
@@ -115,12 +144,13 @@ def reviews(landlord_id=None):
 @action.uses(url_signer.verify(), db, auth, auth.user)
 def add_reviews():
     #assert landlord_id is not None
-    #landlord = db.landlord[landlord_id]
-    
+    #landlord = db.landlord.id
 
     renter = db(db.auth_user.email == get_user_email()).select().first()
     renter_id = renter.id if renter is not None else "Unknown"
     renter_email = renter.email
+    reviews_landlordID = int(session.get('landlordID', None))
+    #reviews_landlordID = request.json.get('reviews_landlordID')
     reviews_score_friendliness=int(request.json.get('reviews_score_friendliness'))
     reviews_score_responsiveness=int(request.json.get('reviews_score_responsiveness'))
     reviews_property_address=request.json.get('reviews_property_address')
@@ -128,11 +158,11 @@ def add_reviews():
     reviews_contents=request.json.get('reviews_contents')
 
     id = db.reviews.insert(
-        #reviews_landlord_id = landlord.id,
         reviews_renters_id=renter_id,
         renter_email = renter_email,
-        # reviews_landlord_id=request.json.get('reviews_landlord_id'),
-        # reviews_address_id=request.json.get('reviews_address_id'),
+        reviews_landlordID = reviews_landlordID,
+        #reviews_landlordID=request.json.get('reviews_landlordID'),
+        reviews_address_id=request.json.get('reviews_address_id'),
         reviews_contents=request.json.get('reviews_contents'),
         reviews_score_responsiveness=request.json.get('reviews_score_responsiveness'),
         reviews_score_friendliness=request.json.get('reviews_score_friendliness'),
@@ -142,7 +172,8 @@ def add_reviews():
         # thumbs_down=request.json.get('thumbs_down'),
     )
     return dict(
-        id=id, 
+        id=id,
+        reviews_landlordID = reviews_landlordID,
         renter_id=renter_id, 
         renter_email=renter_email,
         reviews_score_responsiveness=reviews_score_responsiveness,

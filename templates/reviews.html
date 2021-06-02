@@ -29,15 +29,15 @@
                 </div>
                 <div class="column">
                     <!--Rating values-->
-                    <p class="bd-notification is-info">10/10</p>
-                    <p class="bd-notification is-info">10/10</p>
-                    <p class="bd-notification is-info">10/10</p>
+                    <p class="bd-notification is-info">/10</p>
+                    <p class="bd-notification is-info">/10</p>
+                    <p class="bd-notification is-info">/10</p>
                 </div>
                 </div>
             </div>
         </div>
 
-        <button class="button is-success block" @click="set_add_status(true)">Leave a review</button>
+        <button class="button is-success block is-rounded" @click="set_add_status(true)">Leave a review</button>
 
         <!--Add review-->
         <div v-if="add_mode" class="container block">
@@ -46,13 +46,14 @@
             <div class="pac-card block" id="pac-card">
                 <div id="pac-container">
                     <label for="searchTextField">Property Address</label>
-                    <input id="searchTextField" type="text" size="50" placeholder="Street, City, State, ZIP" autocomplete="on" runat="server" v-model="reviews_property_address" />
+                    <input id="searchTextField" type="text" size="50" placeholder="Street, City, State, ZIP" style="font-family:Gill Sans" autocomplete="on" runat="server" v-model="reviews_property_address" />
                     <input type="hidden" id="city2" name="city2" />
                     <input type="hidden" id="cityLat" name="cityLat" />
                     <input type="hidden" id="cityLng" name="cityLng" />
                 </div>
             </div>
             <div class="container block">
+                <!--[[=landlordID]]-->
                 <label for="review_content">Review</label>
                 <textarea class="textarea" v-model="reviews_contents"></textarea>
 
@@ -65,8 +66,8 @@
 
            <!--Reinput ==form here if necessary-->
     
-           <input type ="submit" class="button is-success" @click="add_post" value="Submit">
-           <input type ="submit" class="button is-warning" @click="set_add_status(false)" value="Cancel">
+           <input type ="submit" style="font-family:'Gill Sans', sans-serif" class="button is-success is-rounded" @click="add_post" value="Submit">
+           <input type ="submit" style="font-family:'Gill Sans', sans-serif" class="button is-warning is-rounded" @click="set_add_status(false)" value="Cancel">
 
 
         </div>
@@ -78,18 +79,18 @@
     <div class="container">
        
         <!--Each review is a section-->
-        <div class="section has-background-info-light block" v-for="r in rows.slice().reverse()">
+        <div class="section has-background-info-light block" v-for="r in rows.slice().reverse()" v-if=" r.reviews_landlordID == [[=landlordID]] ">
             <div class="columns is-mobile is-gapless is-vcentered">
                 <div class="column is-one-fifth">
                     
-                   <span class="title p-5">{{r.reviews_score_overall}}</span>
+                   <span class="title p-5">{{r.reviews_score_overall}}/10</span>
 
 
                 </div>
                 <div class="column">
-                    <span class="p-3">Property: <strong>{{r.reviews_property_address}}</strong></span>
-                    <span class="p-3">Responsiveness: <strong>{{r.reviews_score_responsiveness}}</strong></span>
-                    <span class="p-3">Friendliness: <strong>{{r.reviews_score_friendliness}}</strong></span>
+                    <span class="p-3">Property: <strong>{{r.reviews_property_address}}/10</strong></span>
+                    <span class="p-3">Responsiveness: <strong>{{r.reviews_score_responsiveness}}/10</strong></span>
+                    <span class="p-3">Friendliness: <strong>{{r.reviews_score_friendliness}}/10</strong></span>
                    <!-- <span class="p-3">Would Rent Again: <strong>Yes</strong></span> --> 
                    
                     <div class="section">
@@ -101,7 +102,7 @@
                         <span class="icon p-5">
                             <i class="fas fa-thumbs-down"></i>
                         </span>
-                        <button @click="delete_post(r._idx)" class="button is-danger" v-if="r.renter_email == '[[=globals().get('user').get('email')]]'" style="float: right;">
+                        <button @click="delete_post(r._idx)" class="button is-danger is-rounded" v-if="r.renter_email == '[[=globals().get('user').get('email')]]'" style="float: right;">
                             <i class="fa fa-trash"></i>
                         </button>
                     </div>

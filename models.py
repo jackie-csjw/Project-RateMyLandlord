@@ -27,6 +27,7 @@ db.define_table(
     'landlord',
     # TODO_complete: define the fields that are in the json.
     #Field('landlord_auth_id', 'reference auth_user'),
+    Field('id', readable=False),
     Field('first_name', requires=IS_NOT_EMPTY(error_message=T('Please enter a first name'))),
     Field('last_name', requires=IS_NOT_EMPTY(error_message=T('Please enter a last name'))),
 )
@@ -50,7 +51,7 @@ db.define_table(
     # TODO_complete: define the fields that are in the json.
     Field('reviews_renters_id', 'reference auth_user'),
     Field('renter_email'),
-    Field('reviews_landlord_id', 'reference landlord'),
+    Field('reviews_landlordID'),
     Field('reviews_address_id', 'reference address'),
     Field('reviews_contents', requires=IS_NOT_EMPTY(error_message=T('Review cannot be empty'))),
     Field('reviews_score_overall', default='0'),
@@ -63,7 +64,7 @@ db.define_table(
 
 db.reviews.id.readable = db.reviews.id.writable = False
 db.reviews.reviews_renters_id.readable = db.reviews.reviews_renters_id.writable = False
-db.reviews.reviews_landlord_id.readable = db.reviews.reviews_landlord_id.writable = False
+#db.reviews.reviews_landlord_id.readable = db.reviews.reviews_landlord_id.writable = False
 db.reviews.reviews_address_id.readable = db.reviews.reviews_address_id.writable = False
 db.reviews.thumbs_up.readable = db.reviews.thumbs_up.writable = False
 db.reviews.thumbs_down.readable = db.reviews.thumbs_down.writable = False
