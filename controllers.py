@@ -60,14 +60,14 @@ def index():
     example_landlord1_name = example_landlord1.first_name + " " + example_landlord1.last_name
     rows1 = db(
         (db.reviews.reviews_landlordID == 1)
-    ).select().first()
+    ).select(orderby='<random>').first()
 
 
     example_landlord2 = db.landlord[random_landlords[1]]
     example_landlord2_name = example_landlord2.first_name + " " + example_landlord2.last_name
     rows2 = db(
         (db.reviews.reviews_landlordID == 2)
-    ).select().first()
+    ).select(orderby='<random>').first()
 
     return dict(
         message=message,
