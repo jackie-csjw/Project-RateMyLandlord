@@ -52,6 +52,7 @@ def index():
         load_reviews_url=URL('load_reviews', signer=url_signer),
         add_reviews_url=URL('add_reviews', signer=url_signer),
         delete_reviews_url=URL('delete_reviews', signer=url_signer),
+        search_url=URL('search', signer=url_signer),
         # get_thumbs_up_url=URL('get_thumbs_up', signer=url_signer),
         # get_thumbs_down_url=URL('get_thumbs_down', signer=url_signer),
         # set_thumbs_up_url=URL('set_thumbs_up', signer=url_signer),
@@ -204,6 +205,19 @@ def add_landlord():
         ## CODE TO CREATE URL FOR REVIEW PAGE HERE
         redirect(URL('index')) # change this later to redirect to landlord page
     return dict(form=form)
+
+
+@action('search')
+@action.uses()
+def search():
+    q = request.params.get("q")
+    rows = db(db.landlord).select().as_list()
+    # if
+    results = db(db.landlord).select().as_list()
+    # results = ['name']
+    # results = [q + ":" + str(uuid.uuid1()) for _ in range(random.randint(2, 6))]
+    return dict(results=results)
+
 
 # @action("signup", method=["GET", "POST"])
 # @action.uses(db, session, auth, 'signup.html')
