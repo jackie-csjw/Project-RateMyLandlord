@@ -32,10 +32,15 @@ let init = (app) => {
         }
     }
 
+    app.link_to = function () {
+        
+    }
+
     // This contains all the methods.
     app.methods = {
         // Complete as you see fit.
         search: app.search,
+        link_to: link_to,
     };
 
     // This creates the Vue instance.
