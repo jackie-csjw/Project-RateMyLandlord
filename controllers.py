@@ -103,36 +103,39 @@ def reviews(landlord_id=None):
     assert landlord_id is not None
     landlord = db.landlord[landlord_id]
     landlord_name = landlord.first_name + " " + landlord.last_name
+    
     landlordID = landlord_id
     session['landlordID'] = landlord_id
-    """
+    
     rows = db(
-        (db.landlord.id == landlord_id),
         (db.reviews.reviews_landlordID == landlord_id)
     ).select() # as list
-
+    
     num_rows = db(
-        (db.landlord.id == landlord_id),
         (db.reviews.reviews_landlordID == landlord_id)
     ).count()
-
+    
     avg_overall = 0;
     avg_friend = 0;
     avg_resp = 0;
 
     for r in rows:
-        avg_overall += r.reviews_score_overall
-        avg_friend += r.reviews_score_friendliness
-        avg_resp += r.reviews_score_responsiveness
+        #print(r.reviews_score_overall)
+        avg_overall += float(r.reviews_score_overall)
+        avg_friend += float(r.reviews_score_friendliness)
+        avg_resp += float(r.reviews_score_responsiveness)
     
-    avg_overall = avg_overall/num_rows
-    avg_friend = avg_friend/num_rows
-    avg_resp = avg_resp/num_rows
-    """
+    print(avg_overall)
+    print(num_rows)
+
+    avg_overall = round(avg_overall/num_rows)
+    avg_friend = round(avg_friend/num_rows)
+    avg_resp = round(avg_resp/num_rows)
+    
     return dict(
-        #avg_overall = avg_overall,
-        #avg_friend = avg_friend,
-        #avg_resp = avg_resp,
+        avg_overall = avg_overall,
+        avg_friend = avg_friend,
+        avg_resp = avg_resp,
         landlordID = landlordID,
         landlord_name = landlord_name,
         load_reviews_url = URL('load_reviews', signer=url_signer),
