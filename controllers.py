@@ -47,12 +47,32 @@ def index():
     ])
     user = auth.get_user()
     message = T("Hello {first_name}".format(**user) if user else "Hello")
+
+    example_landlord1 = db.landlord[1]
+    example_landlord1_name = example_landlord1.first_name + " " + example_landlord1.last_name
+    rows1 = db(
+        (db.reviews.reviews_landlordID == 1)
+    ).select().first()
+
+
+    example_landlord2 = db.landlord[2]
+    example_landlord2_name = example_landlord2.first_name + " " + example_landlord2.last_name
+    rows2 = db(
+        (db.reviews.reviews_landlordID == 2)
+    ).select().first()
+
     return dict(
         message=message,
         load_reviews_url=URL('load_reviews', signer=url_signer),
         add_reviews_url=URL('add_reviews', signer=url_signer),
         delete_reviews_url=URL('delete_reviews', signer=url_signer),
         search_url=URL('search', signer=url_signer),
+        example_landlord1=example_landlord1,
+        example_landlord1_name=example_landlord1_name,
+        example_landlord2=example_landlord2,
+        example_landlord2_name=example_landlord2_name,
+        rows1=rows1,
+        rows2=rows2
         # get_thumbs_up_url=URL('get_thumbs_up', signer=url_signer),
         # get_thumbs_down_url=URL('get_thumbs_down', signer=url_signer),
         # set_thumbs_up_url=URL('set_thumbs_up', signer=url_signer),

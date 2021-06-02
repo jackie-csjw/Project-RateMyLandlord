@@ -47,6 +47,9 @@ let init = (app) => {
 
     // And this initializes it.
     app.init = () => {
+        axios.get(load_reviews_url).then(function (response) {
+            app.vue.rows = app.enumerate(response.data.rows);
+        });
         // Put here any initialization code.
         // Typically this is a server GET call to load the data.
     };
