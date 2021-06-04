@@ -17,10 +17,10 @@ a:before {
     <!--<h2 class="subtitle is-5 has-text-centered" style="font-family:Gill Sans; color:rgb(93, 97, 102)">Not sure if you should rent that place? Search to find out!</h2>-->
     <input class="input is-rounded" type="text" placeholder="Landlord's Name / Location" style="font-family:Gill Sans"
            v-model="query">
-<!--           v-model="query" @keyup="search">-->
     <button v-on:click="search">Search</button>
   </div>
 
+<!--  <div> [[=message]]</div>-->
   <div v-for="r in results">{{r}}</div>
 
   <div class="vars">
