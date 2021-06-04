@@ -243,9 +243,19 @@ def add_landlord():
 @action.uses()
 def search():
     q = request.params.get("q")
-    rows = db(db.landlord).select().as_list()
+    print('q is:', q)
+    title_q = q[0].upper() + q[1:].lower()
+    print(title_q)
+    results_found = False
+    for row in db(db.landlord.first_name == title_q).select():
+        print('found', row)
+        results = row
+        results_found = True
+    if results_found is False:
+        results = 'Not Found'
+
     # if
-    results = db(db.landlord).select().as_list()
+    # results = db(db.landlord).select().as_list()
     # results = ['name']
     # results = [q + ":" + str(uuid.uuid1()) for _ in range(random.randint(2, 6))]
     return dict(results=results)
