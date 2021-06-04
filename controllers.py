@@ -33,7 +33,7 @@ from py4web.utils.auth import Auth
 from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, flash
 from py4web.utils.form import Form, FormStyleBulma
 from py4web.utils.url_signer import URLSigner
-from .models import get_user_email, get_user
+from .models import get_user_email, get_user, get_username
 import random
 url_signer = URLSigner(session)
 
@@ -65,8 +65,6 @@ def index():
         (db.reviews.reviews_landlordID == random_landlords[0])
     ).select().sort(lambda row: random.random()).first()
     
-
-
     example_landlord2 = db.landlord[random_landlords[1]]
     example_landlord2_name = example_landlord2.first_name + " " + example_landlord2.last_name
     rows2 = db(
@@ -110,8 +108,13 @@ def dashboard_landlord():
 @action('dashboard_user')
 @action.uses(db, session, auth.user, 'dashboard_user.html')
 def dashboard_user():
+    user = db(db.auth_user.email == get_user_email()).select().first()
+    username = user.first_name + " " + user.last_name
+    email = user.email
 
     return dict(
+        username=username,
+        email=email,
         load_reviews_url = URL('load_reviews', signer=url_signer),
         add_reviews_url = URL('add_reviews', signer=url_signer),
         delete_reviews_url = URL('delete_reviews', signer=url_signer),
