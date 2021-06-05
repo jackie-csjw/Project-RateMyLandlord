@@ -97,7 +97,6 @@ def index():
         set_votes_url=URL('set_votes', signer=url_signer),
         get_voters_url=URL('get_voters', signer=url_signer),
         get_search_url_url=URL('get_search_url', signer=url_signer),
-        add_landlord_url=URL('add_landlord', signer=url_signer),
         # get_thumbs_up_url=URL('get_thumbs_up', signer=url_signer),
         # get_thumbs_down_url=URL('get_thumbs_down', signer=url_signer),
         # set_thumbs_up_url=URL('set_thumbs_up', signer=url_signer),
@@ -205,8 +204,7 @@ def reviews(landlord_id=None):
 def add_landlord():
     form = Form(db.landlord, csrf_session=session, formstyle=FormStyleBulma)
     if form.accepted:
-        id = form.vars['id']
-        redirect(URL('reviews', id))
+        redirect(URL('index'))
     return dict(form=form)
 
 
