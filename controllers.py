@@ -39,7 +39,7 @@ url_signer = URLSigner(session)
 lord_id = 0
 
 
-@action('index')
+@action('index', method=["GET", "POST"])
 @action.uses(db, auth, 'index.html')
 def index():
     auth = Auth(session, db, extra_fields=[
@@ -47,29 +47,39 @@ def index():
     ])
     user = auth.get_user()
     message = T("Hello {first_name}".format(**user) if user else "Hello")
+    
+    landlord_list = db(db.landlord.id).select().as_list()
+    id_list = []
+    for r in landlord_list:
+        # check to see if the landlord has no reviews
+        # if so don't include them in the display
+        if db((db.reviews.reviews_landlordID == r['id'])).select().first() is not None:
+            id_list.append(r['id'])
 
-    landlord_count = db(db.landlord).count()
-    print(landlord_count)
-    if landlord_count > 1:
-        random_landlords = random.sample(range(1, landlord_count+1), 2)
+    if len(id_list) > 1:
+        random_landlords = random.sample(id_list, 2)
     else:  # if there is only one landlord populate page with the only landlord twice
         random_landlords = [1, 1]
-    print(random_landlords)
 
     example_landlord1 = db.landlord[random_landlords[0]]
+    print(example_landlord1)
     example_landlord1_name = example_landlord1.first_name + " " + example_landlord1.last_name
-    # rows1 = db(
-    #     (db.reviews.reviews_landlordID == random_landlords[0])
-    # ).select(orderby='<random>').first()
     rows1 = db(
         (db.reviews.reviews_landlordID == random_landlords[0])
     ).select().sort(lambda row: random.random()).first()
 
     example_landlord2 = db.landlord[random_landlords[1]]
+    print(example_landlord2)
     example_landlord2_name = example_landlord2.first_name + " " + example_landlord2.last_name
     rows2 = db(
         (db.reviews.reviews_landlordID == random_landlords[1])
     ).select().sort(lambda row: random.random()).first()
+
+    form = Form(db.landlord, csrf_session=session, formstyle=FormStyleBulma)
+    if form.accepted:
+        id = form.vars['id']
+        redirect(URL('reviews', id))
+
     return dict(
         message=message,
         load_reviews_url=URL('load_reviews', signer=url_signer),
@@ -82,10 +92,12 @@ def index():
         example_landlord2_id=random_landlords[1],
         rows1=rows1,
         rows2=rows2,
+        form=form,
         get_votes_url=URL('get_votes', signer=url_signer),
         set_votes_url=URL('set_votes', signer=url_signer),
         get_voters_url=URL('get_voters', signer=url_signer),
-        get_search_url_url=URL('get_search_url', signer=url_signer)
+        get_search_url_url=URL('get_search_url', signer=url_signer),
+        add_landlord_url=URL('add_landlord', signer=url_signer),
         # get_thumbs_up_url=URL('get_thumbs_up', signer=url_signer),
         # get_thumbs_down_url=URL('get_thumbs_down', signer=url_signer),
         # set_thumbs_up_url=URL('set_thumbs_up', signer=url_signer),
@@ -168,10 +180,11 @@ def reviews(landlord_id=None):
         avg_overall += float(r.reviews_score_overall)
         avg_friend += float(r.reviews_score_friendliness)
         avg_resp += float(r.reviews_score_responsiveness)
-
-    avg_overall = round(avg_overall/num_rows)
-    avg_friend = round(avg_friend/num_rows)
-    avg_resp = round(avg_resp/num_rows)
+    
+    if num_rows > 0:
+        avg_overall = round(avg_overall/num_rows)
+        avg_friend = round(avg_friend/num_rows)
+        avg_resp = round(avg_resp/num_rows)
     return dict(
         avg_overall=avg_overall,
         avg_friend=avg_friend,
@@ -185,6 +198,16 @@ def reviews(landlord_id=None):
         set_votes_url=URL('set_votes', signer=url_signer),
         get_voters_url=URL('get_voters', signer=url_signer),
     )
+
+    
+@action('add_landlord', method=["GET", "POST"])
+@action.uses(db, session, auth.user)
+def add_landlord():
+    form = Form(db.landlord, csrf_session=session, formstyle=FormStyleBulma)
+    if form.accepted:
+        id = form.vars['id']
+        redirect(URL('reviews', id))
+    return dict(form=form)
 
 
 @action('add_reviews', method=["GET", "POST"])
@@ -282,15 +305,6 @@ def get_voters():
         count = count - 1
     return dict(count=count)
 
-
-@action('add_landlord', method=["GET", "POST"])
-@action.uses(db, session, auth.user, 'add_landlord.html')
-def add_landlord():
-    form = Form(db.landlord, csrf_session=session, formstyle=FormStyleBulma)
-    if form.accepted:
-        # CODE TO CREATE URL FOR REVIEW PAGE HERE
-        redirect(URL('index'))  # change this later to redirect to landlord page
-    return dict(form=form)
 
 
 @action('search')
