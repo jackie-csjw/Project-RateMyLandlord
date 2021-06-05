@@ -82,7 +82,8 @@ def index():
         example_landlord2_name=example_landlord2_name,
         example_landlord2_id=random_landlords[1],
         rows1=rows1,
-        rows2=rows2
+        rows2=rows2,
+        # landlord_results=landlord_results,
         # get_thumbs_up_url=URL('get_thumbs_up', signer=url_signer),
         # get_thumbs_down_url=URL('get_thumbs_down', signer=url_signer),
         # set_thumbs_up_url=URL('set_thumbs_up', signer=url_signer),
@@ -246,12 +247,28 @@ def add_landlord():
 @action.uses()
 def search():
     q = request.params.get("q")
-    rows = db(db.landlord).select().as_list()
+    q_name = q.split()
+    # print('q is:', type(q), q)
+    # print('q_name is:', type(q_name), q_name)
+    q_first_name = q_name[0].title()
+    q_last_name = q_name[1].title()
+    print('stripped name is:', q_first_name, q_last_name)
+    results_found = False
+    results = None
+    for row in db(db.landlord.first_name == q_first_name).select():
+        print('found', type(row), row)
+        print('row.id', row.id)
+        results = row
+        results_found = True
+    if results_found is False:
+        results = 'Not Found'
+
     # if
-    results = db(db.landlord).select().as_list()
+    # results = db(db.landlord).select().as_list()
     # results = ['name']
     # results = [q + ":" + str(uuid.uuid1()) for _ in range(random.randint(2, 6))]
     return dict(results=results)
+# <class 'pydal.objects.Row'> <Row {'id': 1, 'address': <Set ("address"."reviews_landlord_id" = 1)>, 'first_name': 'Jeff', 'last_name': 'Bezos'}
 
 
 # @action("signup", method=["GET", "POST"])
