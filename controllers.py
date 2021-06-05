@@ -303,10 +303,11 @@ def add_landlord():
 def search():
     q = request.params.get("q")
     q_name = q.split()
-    # print('q is:', type(q), q)
-    # print('q_name is:', type(q_name), q_name)
+    print('q is:', type(q), q)
+    print('q_name is:', type(q_name), len(q_name), q_name)
     q_first_name = q_name[0].title()
-    q_last_name = q_name[1].title()
+    if len(q_name) > 1:
+        q_last_name = q_name[1].title()
     """
     print('stripped name is:', q_first_name, q_last_name)
     results_found = False
@@ -323,7 +324,7 @@ def search():
     if results_found is False:
         results = 'Not Found'
     """
-    rows = db(db.landlord.first_name == q_first_name).select().as_list()
+    rows = db(db.landlord.first_name.ilike(q_first_name+'%')).select().as_list()
 
 
     # if

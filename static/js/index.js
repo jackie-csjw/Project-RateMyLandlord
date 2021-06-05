@@ -22,7 +22,7 @@ let init = (app) => {
     };
 
     app.search = function () {
-        if (app.vue.query.length > 1) {
+        if (app.vue.query.length > 0) {
             axios.get(search_url, {params: {q: app.vue.query}})
                 .then(function (row) {
                     app.vue.rows = row.data.rows;
