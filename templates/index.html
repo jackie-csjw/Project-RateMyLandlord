@@ -30,11 +30,8 @@ a:before {
 
 <div class="section">
   <div class="columns">
-    <!-- <div class="column is-half" onClick="window.location.href = 'reviews/1';" > -->
-      <div class="column is-half" onClick="window.location.href = 'reviews/1';" >
-      <a  href="[[=URL('reviews', example_landlord1_id)]]">
+      <div class="column" >
         <div class="box">
-          
           <p class="title is-3" style="text-align:center;">
             [[=example_landlord1_name]]
           </p>
@@ -42,15 +39,20 @@ a:before {
             <strong>Overall rating: [[=rows1.reviews_score_overall]]/10</strong>
           </p>
           <p>
-            <!--[[=rows1.reviews_contents]]-->
-            askdfasdf jsdfij aosifj aoiesfj asoeifj aseoifja sefoia jesfoaisje foaise jfaosiefj aosiefj aoseijf aoesifj asofeij
+            [[=rows1.reviews_contents]]
           </p>
+          <div class="block" style="float: right">
+            <a href="[[=URL('reviews', example_landlord1_id)]]">
+              Go to review: 
+            <span class="icon">
+              <i class="fas fa-arrow-right"></i>
+            </span>
+            </a>
         </div>
-      </a>
+        </div>
     </div>
     
-    <div class="column is-half">
-      <a href="[[=URL('reviews', example_landlord2_id)]]">
+    <div class="column">
       <div class="box">
         <p class="title is-3" style="text-align:center;">
           [[=example_landlord2_name]]
@@ -61,8 +63,15 @@ a:before {
         <p>
           [[=rows2.reviews_contents]]
         </p>
+        <div class="block" style="float: right">
+          <a href="[[=URL('reviews', example_landlord1_id)]]">
+            Go to review: 
+          <span class="icon">
+            <i class="fas fa-arrow-right"></i>
+          </span>
+          </a>
       </div>
-      </a>
+      </div>
     </div>
   </div>
   

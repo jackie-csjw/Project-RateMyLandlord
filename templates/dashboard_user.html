@@ -30,7 +30,7 @@
       <!--Each review is a section-->
       <div class="section has-background-info-light block" v-if="r.renter_email == '[[=globals().get('user').get('email')]]'" v-for="r in rows.slice().reverse()">
         <div class="columns is-mobile is-gapless is-vcentered">
-          <a :href="r.url">
+          <!-- <a :href="r.url"> -->
             <div class="column is-one-fifth">
                 
                <span class="title p-5">{{r.reviews_score_overall}}/10</span>
@@ -56,9 +56,17 @@
                     <button @click="delete_post(r._idx)" class="button is-danger" v-if="r.renter_email == '[[=globals().get('user').get('email')]]'" style="float: right;">
                         <i class="fa fa-trash"></i>
                     </button>
+                  </div>
+                  <div class="block" style="float: right">
+                    <a :href="r.url">
+                      Go to review: 
+                    <span class="icon">
+                      <i class="fas fa-arrow-right"></i>
+                    </span>
+                    </a>
                 </div>
             </div>
-            <a>
+            <!-- <a> -->
         </div>
     </div>
   </div>
