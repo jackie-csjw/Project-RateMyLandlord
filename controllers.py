@@ -38,7 +38,7 @@ import random
 url_signer = URLSigner(session)
 lord_id = 0
 
-# @unauthenticated("index", "index.html") # original skeleton
+
 @action('index')
 @action.uses(db, auth, 'index.html')
 def index():
@@ -50,9 +50,9 @@ def index():
 
     landlord_count = db(db.landlord).count()
     print(landlord_count)
-    if(landlord_count > 1):
+    if landlord_count > 1:
         random_landlords = random.sample(range(1, landlord_count+1), 2)
-    else: # if there is only one landlord populate page with the only landlord twice
+    else:  # if there is only one landlord populate page with the only landlord twice
         random_landlords = [1, 1]
     print(random_landlords)
 
@@ -64,16 +64,12 @@ def index():
     rows1 = db(
         (db.reviews.reviews_landlordID == random_landlords[0])
     ).select().sort(lambda row: random.random()).first()
-    
-
 
     example_landlord2 = db.landlord[random_landlords[1]]
     example_landlord2_name = example_landlord2.first_name + " " + example_landlord2.last_name
     rows2 = db(
         (db.reviews.reviews_landlordID == random_landlords[1])
     ).select().sort(lambda row: random.random()).first()
-
-
     return dict(
         message=message,
         load_reviews_url=URL('load_reviews', signer=url_signer),
@@ -86,10 +82,10 @@ def index():
         example_landlord2_id=random_landlords[1],
         rows1=rows1,
         rows2=rows2,
-        get_votes_url = URL('get_votes', signer=url_signer),
-        set_votes_url = URL('set_votes', signer=url_signer),
-        get_voters_url = URL('get_voters', signer=url_signer),
-        get_search_url_url = URL('get_search_url', signer=url_signer)
+        get_votes_url=URL('get_votes', signer=url_signer),
+        set_votes_url=URL('set_votes', signer=url_signer),
+        get_voters_url=URL('get_voters', signer=url_signer),
+        get_search_url_url=URL('get_search_url', signer=url_signer)
         # get_thumbs_up_url=URL('get_thumbs_up', signer=url_signer),
         # get_thumbs_down_url=URL('get_thumbs_down', signer=url_signer),
         # set_thumbs_up_url=URL('set_thumbs_up', signer=url_signer),
@@ -97,7 +93,6 @@ def index():
         # get_thumbs_up_list_url=URL('get_thumbs_up_list', signer=url_signer),
         # get_thumbs_down_list_url=URL('get_thumbs_down_list', signer=url_signer),
     )
-
 
 
 @action('load_reviews')
@@ -108,15 +103,16 @@ def load_reviews():
     for r in rows:
         # add URL of the corresponding landlord review page
         r['url'] = URL('reviews', r['reviews_landlordID'])
-        landlord =  db(r['reviews_landlordID'] == db.landlord.id).select().first()
+        landlord = db(r['reviews_landlordID'] == db.landlord.id).select().first()
         r['landlord_name'] = landlord.first_name + ' ' + landlord.last_name
     return dict(rows=rows, email=email)
+
 
 @action('dashboard_landlord')
 @action.uses(url_signer.verify(), db)
 def dashboard_landlord():
-
     return dict()
+
 
 @action('dashboard_user')
 @action.uses(db, session, auth.user, 'dashboard_user.html')
@@ -124,13 +120,12 @@ def dashboard_user():
     user = db(db.auth_user.email == get_user_email()).select().first()
     username = user.first_name + " " + user.last_name
     email = user.email
-
     return dict(
         username=username,
         email=email,
-        load_reviews_url = URL('load_reviews', signer=url_signer),
-        add_reviews_url = URL('add_reviews', signer=url_signer),
-        delete_reviews_url = URL('delete_reviews', signer=url_signer),
+        load_reviews_url=URL('load_reviews', signer=url_signer),
+        add_reviews_url=URL('add_reviews', signer=url_signer),
+        delete_reviews_url=URL('delete_reviews', signer=url_signer),
     )
 
 
@@ -146,6 +141,7 @@ def reviews():
     )
 """
 
+
 @action('reviews/<landlord_id:int>', method=["GET", "POST"])
 @action.uses(db, session, auth.user, 'reviews.html')
 def reviews(landlord_id=None):
@@ -158,15 +154,15 @@ def reviews(landlord_id=None):
     
     rows = db(
         (db.reviews.reviews_landlordID == landlord_id)
-    ).select() # as list
+    ).select()  # as list
     
     num_rows = db(
         (db.reviews.reviews_landlordID == landlord_id)
     ).count()
     
-    avg_overall = 0;
-    avg_friend = 0;
-    avg_resp = 0;
+    avg_overall = 0
+    avg_friend = 0
+    avg_resp = 0
 
     for r in rows:
         avg_overall += float(r.reviews_score_overall)
@@ -176,20 +172,20 @@ def reviews(landlord_id=None):
     avg_overall = round(avg_overall/num_rows)
     avg_friend = round(avg_friend/num_rows)
     avg_resp = round(avg_resp/num_rows)
-    
     return dict(
-        avg_overall = avg_overall,
-        avg_friend = avg_friend,
-        avg_resp = avg_resp,
-        landlordID = landlordID,
-        landlord_name = landlord_name,
-        load_reviews_url = URL('load_reviews', signer=url_signer),
-        add_reviews_url = URL('add_reviews', signer=url_signer),
-        delete_reviews_url = URL('delete_reviews', signer=url_signer),
-        get_votes_url = URL('get_votes', signer=url_signer),
-        set_votes_url = URL('set_votes', signer=url_signer),
-        get_voters_url = URL('get_voters', signer=url_signer),
+        avg_overall=avg_overall,
+        avg_friend=avg_friend,
+        avg_resp=avg_resp,
+        landlordID=landlordID,
+        landlord_name=landlord_name,
+        load_reviews_url=URL('load_reviews', signer=url_signer),
+        add_reviews_url=URL('add_reviews', signer=url_signer),
+        delete_reviews_url=URL('delete_reviews', signer=url_signer),
+        get_votes_url=URL('get_votes', signer=url_signer),
+        set_votes_url=URL('set_votes', signer=url_signer),
+        get_voters_url=URL('get_voters', signer=url_signer),
     )
+
 
 @action('add_reviews', method=["GET", "POST"])
 @action.uses(url_signer.verify(), db, auth, auth.user)
@@ -201,17 +197,17 @@ def add_reviews():
     renter_email = renter.email
     reviews_landlordID = int(session.get('landlordID', None))
     #reviews_landlordID = request.json.get('reviews_landlordID')
-    reviews_score_friendliness=int(request.json.get('reviews_score_friendliness'))
-    reviews_score_responsiveness=int(request.json.get('reviews_score_responsiveness'))
-    reviews_property_address=request.json.get('reviews_property_address')
-    reviews_score_overall=(reviews_score_friendliness+reviews_score_responsiveness)/2
-    reviews_contents=request.json.get('reviews_contents')
+    reviews_score_friendliness = int(request.json.get('reviews_score_friendliness'))
+    reviews_score_responsiveness = int(request.json.get('reviews_score_responsiveness'))
+    reviews_property_address = request.json.get('reviews_property_address')
+    reviews_score_overall = (reviews_score_friendliness+reviews_score_responsiveness)/2
+    reviews_contents = request.json.get('reviews_contents')
 
     id = db.reviews.insert(
-        renter_name = renter_name,
+        renter_name=renter_name,
         reviews_renters_id=renter_id,
-        renter_email = renter_email,
-        reviews_landlordID = reviews_landlordID,
+        renter_email=renter_email,
+        reviews_landlordID=reviews_landlordID,
         reviews_address_id=request.json.get('reviews_address_id'),
         reviews_contents=request.json.get('reviews_contents'),
         reviews_score_responsiveness=request.json.get('reviews_score_responsiveness'),
@@ -219,18 +215,17 @@ def add_reviews():
         reviews_property_address=request.json.get('reviews_property_address'),
         reviews_score_overall=(reviews_score_friendliness+reviews_score_responsiveness)/2,
     )
-    
     return dict(
-        renter_name = renter_name,
+        renter_name=renter_name,
         id=id,
-        reviews_landlordID = reviews_landlordID,
+        reviews_landlordID=reviews_landlordID,
         renter_id=renter_id, 
         renter_email=renter_email,
         reviews_score_responsiveness=reviews_score_responsiveness,
-        reviews_score_friendliness = reviews_score_friendliness,
-        reviews_property_address= reviews_property_address,
-        reviews_score_overall = reviews_score_overall,
-        reviews_contents = reviews_contents,
+        reviews_score_friendliness=reviews_score_friendliness,
+        reviews_property_address=reviews_property_address,
+        reviews_score_overall=reviews_score_overall,
+        reviews_contents=reviews_contents,
     )
 
 
@@ -249,7 +244,8 @@ def get_votes():
     review_id = request.params.get('review_id')
     r = db((db.votings.review == review_id) & (db.votings.voter == get_user())).select().first()
     voted = r.voted if r is not None else 0
-    return dict(voted = voted)
+    return dict(voted=voted)
+
 
 @action('set_votes', method="POST")
 @action.uses(db, auth.user, url_signer.verify())
@@ -264,9 +260,9 @@ def set_votes():
     else:
         voted = checkVoted
     db.votings.update_or_insert(((db.votings.review == review_id) & (db.votings.voter == get_user())),
-        voter = get_user(),
-        voted = voted,
-        review = review_id,
+        voter=get_user(),
+        voted=voted,
+        review=review_id,
     )
     return "-Vote Updated-"
     
@@ -284,8 +280,7 @@ def get_voters():
     alldvTers = db((db.votings.review == review_id) & (db.votings.voted == 2)).select().as_list()
     for dvTer in alldvTers:
         count = count - 1
-
-    return dict(count = count)
+    return dict(count=count)
 
 
 @action('add_landlord', method=["GET", "POST"])
@@ -293,8 +288,8 @@ def get_voters():
 def add_landlord():
     form = Form(db.landlord, csrf_session=session, formstyle=FormStyleBulma)
     if form.accepted:
-        ## CODE TO CREATE URL FOR REVIEW PAGE HERE
-        redirect(URL('index')) # change this later to redirect to landlord page
+        # CODE TO CREATE URL FOR REVIEW PAGE HERE
+        redirect(URL('index'))  # change this later to redirect to landlord page
     return dict(form=form)
 
 
@@ -306,12 +301,19 @@ def search():
     print('q is:', type(q), q)
     print('q_name is:', type(q_name), len(q_name), q_name)
     q_first_name = q_name[0].title()
+    not_found = False
     if len(q_name) < 2:
         rows = db(db.landlord.first_name.ilike(q_first_name+'%')).select().as_list()
+        print('rows is:', rows)
+        if len(rows) == 0:
+            not_found = True
     else:
         q_last_name = q_name[1].title()
         rows = db((db.landlord.first_name.ilike(q_first_name + '%')) &
                   (db.landlord.last_name.ilike(q_last_name + '%'))).select().as_list()
+        if len(rows) == 0:
+            not_found = True
+    print('is not found:', not_found)
     """
     print('stripped name is:', q_first_name, q_last_name)
     results_found = False
@@ -322,14 +324,14 @@ def search():
 
         results = [{row.first_name + " " + row.last_name}, {row.id}]
 
-
         print(results)
         results_found = True
     if results_found is False:
         results = 'Not Found'
     """
     # rows = db(db.landlord.first_name.ilike(q_first_name+'%')).select().as_list()
-    return dict(rows=rows)
+    return dict(rows=rows, not_found=not_found)
+
 
 @action('get_search_url')
 @action.uses(db, url_signer)
@@ -363,9 +365,6 @@ def get_search_url():
 #     return dict(form=form)
 
 
-
-
-
 # @action('add_address', method=["GET", "POST"])
 # @action.uses(db, session, auth.user, 'add_review.html')
 # def add_address():
@@ -379,7 +378,7 @@ def get_search_url():
 #     return dict(form=form)
 
 
-#----------------------------------------thumbs up/down code, uncomment when ready
+# ----------------------------------------thumbs up/down code, uncomment when ready
 # @action("get_thumbs_up")
 # @action.uses(url_signer.verify(), db)
 # def get_thumbs_up():

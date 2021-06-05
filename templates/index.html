@@ -23,9 +23,13 @@ a:before {
   </div>
 
   <div v-for="r in rows">
-   
     <a @click="goto_lord(r._idx)">{{r.first_name}} {{r.last_name}}</a>
-  
+  </div>
+
+  <div v-if="not_found == 'True'">
+    <p>
+      unknown {{not_found}}{{rows}}
+    </p>
   </div>
 
   <div class="vars">
