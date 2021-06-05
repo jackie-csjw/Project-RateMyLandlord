@@ -98,6 +98,11 @@ def index():
 def load_reviews():
     rows = db(db.reviews).select().as_list()
     email = auth.get_user()['email']
+    for r in rows:
+        # add URL of the corresponding landlord review page
+        r['url'] = URL('reviews', r['reviews_landlordID'])
+        landlord =  db(r['reviews_landlordID'] == db.landlord.id).select().first()
+        r['landlord_name'] = landlord.first_name + ' ' + landlord.last_name
     return dict(rows=rows, email=email)
 
 @action('dashboard_landlord')
