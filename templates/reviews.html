@@ -19,7 +19,7 @@
             </div>
         
             <div class="column">
-                <h4 class="title">[[=landlord_name]]</h4>
+                <h4 class="title" style="font-family:'Gill Sans', sans-serif">[[=landlord_name]]</h4>
                 <div class="columns is-mobile">
                 <div class="column">
                     <!--Rating titles-->
@@ -37,7 +37,7 @@
             </div>
         </div>
 
-        <button class="button is-success block is-rounded" @click="set_add_status(true)">Leave a review</button>
+        <button class="button is-success block is-rounded has-text-weight-medium" @click="set_add_status(true)">Leave a review</button>
 
         <!--Add review-->
         <div v-if="add_mode" class="container block">
@@ -66,8 +66,8 @@
 
            <!--Reinput ==form here if necessary-->
     
-           <input type ="submit" style="font-family:'Gill Sans', sans-serif" class="button is-success is-rounded" @click="add_post" value="Submit">
-           <input type ="submit" style="font-family:'Gill Sans', sans-serif" class="button is-warning is-rounded" @click="set_add_status(false)" value="Cancel">
+           <input type ="submit" style="font-family:'Gill Sans', sans-serif" class="button is-success is-rounded has-text-weight-medium" @click="add_post" value="Submit">
+           <input type ="submit" style="font-family:'Gill Sans', sans-serif" class="button is-warning is-rounded has-text-weight-medium" @click="set_add_status(false)" value="Cancel">
 
 
         </div>
@@ -80,39 +80,54 @@
        
         <!--Each review is a section-->
         <div class="section has-background-info-light block" v-for="r in rows.slice().reverse()" v-if=" r.reviews_landlordID == [[=landlordID]] ">
-            <div class="columns is-mobile is-gapless is-vcentered">
+            <div class="columns is-mobile is-gapless is-vcentered is-multiline">
                 <div class="column is-one-fifth">
                     
-                   <span class="title p-5">{{r.reviews_score_overall}}/10</span>
-
+                   <span class="title p-5 is-italic" style="font-family:'Gill Sans', sans-serif"><u>{{r.reviews_score_overall}}</u></span>
+                   
+                  <!--<span class="button">
+                    <i class="fas fa-thumbs-up"></i>
+                    </span>
+                    <span class="button">
+                        <i class="fas fa-thumbs-down"></i>
+                    </span>-->
 
                 </div>
+
                 <div class="column">
                     <span class="p-3">Property: <strong>{{r.reviews_property_address}}</strong></span>
-                    <span class="p-3">Responsiveness: <strong>{{r.reviews_score_responsiveness}}/10</strong></span>
-                    <span class="p-3">Friendliness: <strong>{{r.reviews_score_friendliness}}/10</strong></span>
-                   <!-- <span class="p-3">Would Rent Again: <strong>Yes</strong></span> --> 
+                    <br>
+                    <span class="p-3">Responsiveness: <strong>{{r.reviews_score_responsiveness}}</strong></span>
+                    <span class="p-3">Friendliness: <strong>{{r.reviews_score_friendliness}}</strong></span>
+                   <!-- class="card-footer-item" <span class="p-3">Would Rent Again: <strong>Yes</strong></span> --> 
                    
                     <div class="section">
                         <p>{{r.reviews_contents}}</p>
-                        <br>
-                        <span class="icon">
-                            <i class="fas fa-thumbs-up"></i>
-                        </span>
-                        <span class="icon p-5">
-                            <i class="fas fa-thumbs-down"></i>
-                        </span>
-                        <button @click="delete_post(r._idx)" class="button is-danger is-rounded" v-if="r.renter_email == '[[=globals().get('user').get('email')]]'" style="float: right;">
-                            <i class="fa fa-trash"></i>
-                        </button>
                     </div>
+
                     <!--v-if="r.renter_email == '[[=globals().get('user').get('email')]]'"-->
-                
+                    
                 </div>
+                
+                <div class="section">
+                    <span style="font-size:12px; font-family:'Gill Sans', sans-serif">&nbsp&nbspFound this helpful?</span>
+                    <br>
+                    <span v-for="vote_idx in [1, 2]" @mousehover="votes_hover(r._idx, vote_idx)" @click="set_votes(r._idx, vote_idx)">
+                        <span v-if="vote_idx == 1">
+                            <button :class="{'button is-rounded is-dark': vote_idx == r.voted, 'button is-rounded': vote_idx != r.voted }"><i class="fa fa-arrow-circle-up"></i></button>
+                        </span>
+                        <br><span v-if="vote_idx == 1" style="font-family:'Gill Sans', sans-serif">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{r.count}}</span>
+                        <span v-if="vote_idx == 2">
+                            <button :class="{'button is-rounded is-dark': vote_idx == r.voted, 'button is-rounded': vote_idx != r.voted }"><i class="fa fa-arrow-circle-down"></i></button>
+                        </span>
+                    </span>
 
+                    <br><br>
+                    <button @click="delete_post(r._idx)" class="button is-danger is-rounded" v-if="r.renter_email == '[[=globals().get('user').get('email')]]'">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>               
             </div>
-
-
         </div>
     </div>
 
@@ -128,7 +143,10 @@
     let add_reviews_url = "[[=XML(add_reviews_url)]]";
     let load_reviews_url = "[[=XML(load_reviews_url)]]";
     let delete_reviews_url = "[[=XML(delete_reviews_url)]]";
+
+    let get_votes_url = "[[=XML(get_votes_url)]]";
+    let set_votes_url = "[[=XML(set_votes_url)]]";
+    let get_voters_url = "[[=XML(get_voters_url)]]";
 </script>
 <script src="js/reviews.js"></script>
-
 [[end]]

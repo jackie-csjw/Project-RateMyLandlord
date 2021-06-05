@@ -2,11 +2,6 @@
 // and be used to initialize it.
 let app = {};
 
-// set_add_status <-- jackie
-// add_post <--  jimmy
-// reset_form <-- jimmy
-// delete_post <-- jackie
-
 
 // Given an empty app object, initializes it filling its attributes,
 // creates a Vue instance, and then initializes the Vue instance.
@@ -29,6 +24,7 @@ let init = (app) => {
 
         r_value: 5,
         f_value: 5,
+        count: 0,
 
     };
 
@@ -37,6 +33,13 @@ let init = (app) => {
         let k = 0;
         a.map((e) => {e._idx = k++;});
         return a;
+    };
+
+    app.complete = (reviews) => {
+        reviews.map((review) => {
+            review.voted = 0;
+            review.vote_display = 0;
+        })
     };
 
     app.set_add_status = function(new_status){
@@ -83,7 +86,7 @@ let init = (app) => {
                 reviews_score_friendliness: response.data.reviews_score_friendliness,
                 renter_email: response.data.renter_email,
                 reviews_score_overall: response.data.reviews_score_overall,
-                
+                renter_name: response.data.renter_name,
             });
             app.enumerate(app.vue.rows);
             app.reset_form();
@@ -134,6 +137,46 @@ let init = (app) => {
     };
 
 
+    app.votes_hover = function(review_idx, vote_status){
+        let review = app.vue.rows[review_idx];
+        review.vote_display = vote_status;
+
+        axios.get(get_voters_url, {params: {review_id: review.id}})
+        .then((response) => {
+            count = response.data.count;
+            Vue.set(review, 'count', count);
+        });
+    };
+
+
+    app.set_votes = function(review_idx, vote_status){
+        let review = app.vue.rows[review_idx];
+
+        if(vote_status !== review.voted){
+            review.voted = vote_status;
+        }
+        else{
+            review.voted = 0;
+        }
+
+        axios.post(set_votes_url, {review_id: review.id, voted: review.voted});
+        axios.get(get_voters_url, {params: {review_id: review.id}})
+        .then((response) => {
+            count = response.data.count;
+            Vue.set(review, 'count', count);
+        });
+
+    };
+
+
+    app.load_count = function(review){
+        axios.get(get_voters_url, {params: {review_id: review.id}})
+        .then((response) => {
+            count = response.data.count;
+            Vue.set(review, 'count', count);
+        });
+    }
+
     // This contains all the methods.
     app.methods = {
         // Complete as you see fit.
@@ -144,6 +187,10 @@ let init = (app) => {
        // init_autofill: app.init_autofill,
         change_r_value: app.change_r_value,
         change_f_value: app.change_f_value,
+
+        votes_hover: app.votes_hover,
+        set_votes: app.set_votes,
+        load_count: app.load_count
     };
 
     // This creates the Vue instance.
@@ -154,13 +201,26 @@ let init = (app) => {
     });
 
     // And this initializes it.
-    app.init = () => {
+    app.init = (review_id) => {
         // Put here any initialization code.
         // Typically this is a server GET call to load the data.
         axios.get(load_reviews_url).then(function (response) {
-            app.vue.rows = app.enumerate(response.data.rows);
+            let r = app.enumerate(response.data.rows);
+            app.enumerate(r);
+            app.complete(r);
+            app.vue.rows = r;
+        })
+        .then(() => {
+            for(let review of app.vue.rows) {
+                app.load_count(review);
+                axios.get(get_votes_url, {params: {"review_id": review.id}})
+                    .then((result) => {
+                        review.voted = result.data.voted;
+                        review.vote_display = result.data.voted;
+                    });
+            }
         });
-
+        
     };
 
     // Call to the initializer.
