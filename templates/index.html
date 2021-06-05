@@ -18,13 +18,13 @@ a:before {
     <input class="input is-rounded" type="text" placeholder="Landlord's Name / Location" style="font-family:Gill Sans"
            v-model="query" @keyup="search">
 
-    <button v-on:click="search">Search</button>
+    <!--<button v-on:click="search">Search</button>-->
     
   </div>
 
-  <div v-if="results[0] != undefined"v-for="r in results">
+  <div v-for="r in rows">
    
-    <a href="[[=URL('reviews')]]">{{r[0]}}</a>
+    <a @click="goto_lord(r._idx)">{{r.first_name}} {{r.last_name}}</a>
   
   </div>
 
@@ -95,7 +95,8 @@ a:before {
 <!-- Loads the index-specific js for Vue -->
 <script>
   let search_url = "[[=XML(search_url)]]";
- 
+  let get_search_url_url = "[[=XML(get_search_url_url)]]";
+  let load_reviews_url = "[[=XML(load_reviews_url)]]";
 </script>
 <script src="js/index.js"></script>
 [[end]]

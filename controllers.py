@@ -73,6 +73,7 @@ def index():
         (db.reviews.reviews_landlordID == random_landlords[1])
     ).select().sort(lambda row: random.random()).first()
 
+
     return dict(
         message=message,
         load_reviews_url=URL('load_reviews', signer=url_signer),
@@ -88,7 +89,7 @@ def index():
         get_votes_url = URL('get_votes', signer=url_signer),
         set_votes_url = URL('set_votes', signer=url_signer),
         get_voters_url = URL('get_voters', signer=url_signer),
-
+        get_search_url_url = URL('get_search_url', signer=url_signer)
         # get_thumbs_up_url=URL('get_thumbs_up', signer=url_signer),
         # get_thumbs_down_url=URL('get_thumbs_down', signer=url_signer),
         # set_thumbs_up_url=URL('set_thumbs_up', signer=url_signer),
@@ -306,6 +307,7 @@ def search():
     # print('q_name is:', type(q_name), q_name)
     q_first_name = q_name[0].title()
     q_last_name = q_name[1].title()
+    """
     print('stripped name is:', q_first_name, q_last_name)
     results_found = False
     results = 0
@@ -314,18 +316,27 @@ def search():
         print('row.id', row.id)
        
         results = [{row.first_name + " " + row.last_name}, {row.id}]
-        landlord_id = row.id
+       
       
         print(results)
         results_found = True
     if results_found is False:
         results = 'Not Found'
+    """
+    rows = db(db.landlord.first_name == q_first_name).select().as_list()
+
 
     # if
     # results = db(db.landlord).select().as_list()
     # results = ['name']
     # results = [q + ":" + str(uuid.uuid1()) for _ in range(random.randint(2, 6))]
-    return dict(results=results)
+    return dict(rows=rows)
+
+@action('get_search_url')
+@action.uses(db, url_signer)
+def get_search_url():
+    lord_id = int(request.params.get('lord_id'))
+    return dict(url=URL('reviews', lord_id))
 
 # @action("signup", method=["GET", "POST"])
 # @action.uses(db, session, auth, 'signup.html')
