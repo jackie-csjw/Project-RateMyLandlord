@@ -296,6 +296,7 @@ def add_landlord():
         redirect(URL('index')) # change this later to redirect to landlord page
     return dict(form=form)
 
+
 @action('search')
 @action.uses()
 def search():

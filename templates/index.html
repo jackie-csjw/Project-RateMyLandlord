@@ -35,33 +35,16 @@ a:before {
 
 <div class="section">
   <div class="columns">
-      <div class="column" >
-        <div class="box">
-          <p class="title is-3" style="text-align:center;">
-            [[=example_landlord1_name]]
-          </p>
-          <p style="text-align:right;">
-            <strong>Overall rating: [[=rows1.reviews_score_overall]]/10</strong>
-          </p>
-          <p>
-            <!--[[=rows1.reviews_contents]]-->
-            askdfasdf jsdfij aosifj aoiesfj asoeifj aseoifja sefoia jesfoaisje foaise jfaosiefj aosiefj aoseijf aoesifj asofeij
-          </p>
-        </div>
-      </a>
-    </div>
-    
-    <div class="column is-half">
-      <a href="[[=URL('reviews', example_landlord2_id)]]">
+    <div class="column" >
       <div class="box">
         <p class="title is-3" style="text-align:center;">
-          [[=example_landlord2_name]]
+          [[=example_landlord1_name]]
         </p>
         <p style="text-align:right;">
-          <strong>Overall rating: [[=rows2.reviews_score_overall]]/10</strong>
+          <strong>Overall rating: [[=rows1.reviews_score_overall]]/10</strong>
         </p>
         <p>
-          [[=rows2.reviews_contents]]
+          [[=rows1.reviews_contents]]
         </p>
         <div class="block" style="float: right">
           <a href="[[=URL('reviews', example_landlord1_id)]]">
@@ -72,8 +55,30 @@ a:before {
           </a>
       </div>
       </div>
+  </div>
+  
+  <div class="column">
+    <div class="box">
+      <p class="title is-3" style="text-align:center;">
+        [[=example_landlord2_name]]
+      </p>
+      <p style="text-align:right;">
+        <strong>Overall rating: [[=rows2.reviews_score_overall]]/10</strong>
+      </p>
+      <p>
+        [[=rows2.reviews_contents]]
+      </p>
+      <div class="block" style="float: right">
+        <a href="[[=URL('reviews', example_landlord1_id)]]">
+          Go to review: 
+        <span class="icon">
+          <i class="fas fa-arrow-right"></i>
+        </span>
+        </a>
+    </div>
     </div>
   </div>
+</div>
   
   
   
