@@ -51,6 +51,7 @@ db.define_table(
     # TODO_complete: define the fields that are in the json.
     Field('reviews_renters_id', 'reference auth_user'),
     Field('renter_email'),
+    Field('renter_name'),
     Field('reviews_landlordID'),
     Field('reviews_address_id', 'reference address'),
     Field('reviews_contents', requires=IS_NOT_EMPTY(error_message=T('Review cannot be empty'))),
@@ -58,8 +59,9 @@ db.define_table(
     Field('reviews_score_responsiveness', default='0'),
     Field('reviews_score_friendliness', default='0'),
     Field('reviews_property_address', requires=IS_NOT_EMPTY(error_message=T('Property Address Required'))),
+    Field('count'),
     Field('thumbs_up', default='0'),
-    Field('thumbs_down', defualt='0'),
+    Field('thumbs_down', default='0'),
 )
 
 db.reviews.id.readable = db.reviews.id.writable = False
@@ -85,6 +87,13 @@ db.define_table(
     Field('reply', requires=IS_NOT_EMPTY(error_message=T('Reply cannot be empty'))),
     Field('username', 'reference auth_user', default=get_username),
     Field('review_id', 'reference reviews'),
+)
+
+
+db.define_table('votings',
+                Field('review', 'reference reviews'),
+                Field('voted', 'integer', default = 0),
+                Field('voter', 'reference auth_user', default=get_user),
 )
 
 

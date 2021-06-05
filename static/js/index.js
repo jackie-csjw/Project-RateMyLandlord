@@ -11,7 +11,8 @@ let init = (app) => {
     app.data = {
         // Complete as you see fit.
         query: "",
-        results: [],
+        rows: [],
+        not_found: ""
     };
 
     app.enumerate = (a) => {
@@ -24,13 +25,35 @@ let init = (app) => {
     app.search = function () {
         if (app.vue.query.length > 1) {
             axios.get(search_url, {params: {q: app.vue.query}})
-                .then(function (result) {
-                    app.vue.results = result.data.results;
+                .then(function (row) {
+                    app.vue.rows = row.data.rows;
+                    app.vue.not_found = row.data.not_found;
                 });
         } else {
-            app.vue.results = [];
+            app.vue.rows = [];
+            app.vue.not_found = ''
         }
-    }
+    };
+
+    app.goto_lord = function (r_idx){
+       /* let l = app.vue.rows[r_idx];
+        console.log(r_idx);
+        console.log(app.vue.rows);
+        axios.get(get_search_url_url, {params: {lord_id: l.id}})
+            .then(function(r){
+                console.log("here");
+                window.location = r.data.url;
+            });*/
+
+        for(let i = 0; i < app.vue.rows.length; i++){
+            let l = app.vue.rows[i];
+            axios.get(get_search_url_url, {params: {lord_id: l.id}})
+            .then(function(r){
+                console.log("here");
+                window.location = r.data.url;
+            });
+        }
+    };
 
     app.link_to = function () {
         
@@ -40,7 +63,8 @@ let init = (app) => {
     app.methods = {
         // Complete as you see fit.
         search: app.search,
-//        link_to: link_to,
+        goto_lord: app.goto_lord
+       // link_to: link_to,
     };
 
     // This creates the Vue instance.
@@ -52,11 +76,11 @@ let init = (app) => {
 
     // And this initializes it.
     app.init = () => {
-//        axios.get(load_reviews_url).then(function (response) {
-//            app.vue.rows = app.enumerate(response.data.rows);
-//        });
         // Put here any initialization code.
         // Typically this is a server GET call to load the data.
+       /* axios.get(load_reviews_url).then(function (response) {
+            app.vue.rows = app.enumerate(response.data.rows);
+        }); */
     };
 
     // Call to the initializer.
