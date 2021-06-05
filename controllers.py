@@ -293,7 +293,7 @@ def get_voters():
 def add_landlord():
     form = Form(db.landlord, csrf_session=session, formstyle=FormStyleBulma)
     if form.accepted:
-        ## CODE TO CREATE URL FOR REVIEW PAGE HERE
+        ## CODE TO CREATE URL FOR REVIEW PAGE HERE 
         redirect(URL('index')) # change this later to redirect to landlord page
     return dict(form=form)
 
@@ -303,10 +303,22 @@ def add_landlord():
 def search():
     q = request.params.get("q")
     q_name = q.split()
-    # print('q is:', type(q), q)
-    # print('q_name is:', type(q_name), q_name)
+    print('q is:', type(q), q)
+    print('q_name is:', type(q_name), len(q_name), q_name)
     q_first_name = q_name[0].title()
-    q_last_name = q_name[1].title()
+    not_found = False
+    if len(q_name) < 2:
+        rows = db(db.landlord.first_name.ilike(q_first_name+'%')).select().as_list()
+        print('rows is:', rows)
+        if len(rows) == 0:
+            not_found = True
+    else:
+        q_last_name = q_name[1].title()
+        rows = db((db.landlord.first_name.ilike(q_first_name + '%')) &
+                  (db.landlord.last_name.ilike(q_last_name + '%'))).select().as_list()
+        if len(rows) == 0:
+            not_found = True
+    print('is not found:', not_found)
     """
     print('stripped name is:', q_first_name, q_last_name)
     results_found = False
@@ -314,23 +326,22 @@ def search():
     for row in db(db.landlord.first_name == q_first_name).select():
         print('found', type(row), row)
         print('row.id', row.id)
-       
         results = [{row.first_name + " " + row.last_name}, {row.id}]
-       
-      
         print(results)
         results_found = True
     if results_found is False:
         results = 'Not Found'
     """
-    rows = db(db.landlord.first_name == q_first_name).select().as_list()
+    # rows = db(db.landlord.first_name.ilike(q_first_name+'%')).select().as_list()
+    return dict(rows=rows, not_found=not_found)
+
 
 
     # if
     # results = db(db.landlord).select().as_list()
     # results = ['name']
     # results = [q + ":" + str(uuid.uuid1()) for _ in range(random.randint(2, 6))]
-    return dict(rows=rows)
+
 
 @action('get_search_url')
 @action.uses(db, url_signer)

@@ -12,6 +12,7 @@ let init = (app) => {
         // Complete as you see fit.
         query: "",
         rows: [],
+        not_found: null
     };
 
     app.enumerate = (a) => {
@@ -26,13 +27,16 @@ let init = (app) => {
             axios.get(search_url, {params: {q: app.vue.query}})
                 .then(function (row) {
                     app.vue.rows = row.data.rows;
+                    app.vue.not_found = row.data.not_found;
                 });
         } else {
             app.vue.rows = [];
+            app.vue.not_found = ''
         }
+        
     };
 
-    app.goto_lord = function (r_idx){
+    app.goto_lord = function (){
        /* let l = app.vue.rows[r_idx];
         console.log(r_idx);
         console.log(app.vue.rows);

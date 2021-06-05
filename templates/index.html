@@ -11,26 +11,25 @@ a:before {
 </style>
 
 <center><img src="https://i.ibb.co/fXBWB6c/Screen-Shot-2021-05-09-at-8-23-10-PM.png" width="50%"></center>
-
-<div class="section" id="vue-target" v-cloak>
-  <div class="control block">
+<br>
+<div class="" id="vue-target" v-cloak>
+  <div class="control block"></div>
     <!--<h2 class="subtitle is-5 has-text-centered" style="font-family:Gill Sans; color:rgb(93, 97, 102)">Not sure if you should rent that place? Search to find out!</h2>-->
     <input class="input is-rounded" type="text" placeholder="Landlord's Name / Location" style="font-family:Gill Sans"
            v-model="query" @keyup="search">
 
-    <!--<button v-on:click="search">Search</button>-->
-    
-  </div>
-
   <div v-for="r in rows">
-   
-    <a @click="goto_lord(r._idx)">{{r.first_name}} {{r.last_name}}</a>
-  
+    <hr>
+      <a @click="goto_lord()">{{r.first_name}} {{r.last_name}}</a>
   </div>
 
-  <div class="vars">
-      <!--[[=message]]-->
+  <div v-if="not_found == true">
+    <p>
+     <a href="[[=URL('add_landlord')]]">This landlord isn't here. Click to add!</a> <!--unknown {{not_found}}{{rows}}-->
+    </p>
   </div>
+
+
 </div>
 
 <div class="section">
