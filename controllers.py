@@ -306,8 +306,12 @@ def search():
     print('q is:', type(q), q)
     print('q_name is:', type(q_name), len(q_name), q_name)
     q_first_name = q_name[0].title()
-    if len(q_name) > 1:
+    if len(q_name) < 2:
+        rows = db(db.landlord.first_name.ilike(q_first_name+'%')).select().as_list()
+    else:
         q_last_name = q_name[1].title()
+        rows = db((db.landlord.first_name.ilike(q_first_name + '%')) &
+                  (db.landlord.last_name.ilike(q_last_name + '%'))).select().as_list()
     """
     print('stripped name is:', q_first_name, q_last_name)
     results_found = False
@@ -315,22 +319,16 @@ def search():
     for row in db(db.landlord.first_name == q_first_name).select():
         print('found', type(row), row)
         print('row.id', row.id)
-       
+
         results = [{row.first_name + " " + row.last_name}, {row.id}]
-       
-      
+
+
         print(results)
         results_found = True
     if results_found is False:
         results = 'Not Found'
     """
-    rows = db(db.landlord.first_name.ilike(q_first_name+'%')).select().as_list()
-
-
-    # if
-    # results = db(db.landlord).select().as_list()
-    # results = ['name']
-    # results = [q + ":" + str(uuid.uuid1()) for _ in range(random.randint(2, 6))]
+    # rows = db(db.landlord.first_name.ilike(q_first_name+'%')).select().as_list()
     return dict(rows=rows)
 
 @action('get_search_url')
