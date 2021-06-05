@@ -4,7 +4,7 @@
        display: none;
   }
 
-  a { color: inherit; } 
+  /* a { color: inherit; }  */
 </style>
 
 <div class="section" id="vue-target" v-cloak>
@@ -37,9 +37,8 @@
 
             </div>
             <div class="column">
-                <span class="p-3">Landlord name: <strong>{{r.landlord_name}}</strong></span>
-                <div class="block"></div>
-                <span class="p-3">Property: <strong>{{r.reviews_property_address}}</strong></span>
+                <span class="p-3">Landlord name: <strong>{{r.landlord_name}}</strong></span><br />
+                <span class="p-3">Property: <strong>{{r.reviews_property_address}}</strong></span><br />
                 <span class="p-3">Responsiveness: <strong>{{r.reviews_score_responsiveness}}/10</strong></span>
                 <span class="p-3">Friendliness: <strong>{{r.reviews_score_friendliness}}/10</strong></span>
                <!-- <span class="p-3">Would Rent Again: <strong>Yes</strong></span> --> 
