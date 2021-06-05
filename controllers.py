@@ -97,12 +97,6 @@ def index():
         set_votes_url=URL('set_votes', signer=url_signer),
         get_voters_url=URL('get_voters', signer=url_signer),
         get_search_url_url=URL('get_search_url', signer=url_signer),
-        # get_thumbs_up_url=URL('get_thumbs_up', signer=url_signer),
-        # get_thumbs_down_url=URL('get_thumbs_down', signer=url_signer),
-        # set_thumbs_up_url=URL('set_thumbs_up', signer=url_signer),
-        # set_thumbs_down_url=URL('set_thumbs_down', signer=url_signer),
-        # get_thumbs_up_list_url=URL('get_thumbs_up_list', signer=url_signer),
-        # get_thumbs_down_list_url=URL('get_thumbs_down_list', signer=url_signer),
     )
 
 
@@ -138,20 +132,7 @@ def dashboard_user():
         add_reviews_url=URL('add_reviews', signer=url_signer),
         delete_reviews_url=URL('delete_reviews', signer=url_signer),
     )
-
-
-""" previous version
-@action('reviews', method=["GET", "POST"])
-@action.uses(db, session, auth.user, 'reviews.html')
-def reviews():
-    
-    return dict(
-        load_reviews_url = URL('load_reviews', signer=url_signer),
-        add_reviews_url = URL('add_reviews', signer=url_signer),
-        delete_reviews_url = URL('delete_reviews', signer=url_signer),
-    )
-"""
-
+ 
 
 @action('reviews/<landlord_id:int>', method=["GET", "POST"])
 @action.uses(db, session, auth.user, 'reviews.html')
@@ -200,11 +181,13 @@ def reviews(landlord_id=None):
 
     
 @action('add_landlord', method=["GET", "POST"])
-@action.uses(db, session, auth.user)
+@action.uses(db, session, auth.user, 'add_landlord.html')
 def add_landlord():
     form = Form(db.landlord, csrf_session=session, formstyle=FormStyleBulma)
+    
     if form.accepted:
-        redirect(URL('index'))
+        landlord_id = int(db(db.landlord.id).select().last())
+        redirect(URL('reviews', landlord_id))
     return dict(form=form)
 
 
@@ -303,17 +286,7 @@ def get_voters():
         count = count - 1
     return dict(count=count)
 
-    
 
-
-@action('add_landlord', method=["GET", "POST"])
-@action.uses(db, session, auth.user, 'add_landlord.html')
-def add_landlord():
-    form = Form(db.landlord, csrf_session=session, formstyle=FormStyleBulma)
-    if form.accepted:
-        ## CODE TO CREATE URL FOR REVIEW PAGE HERE 
-        redirect(URL('index')) # change this later to redirect to landlord page
-    return dict(form=form)
 
 
 @action('search')
@@ -321,13 +294,13 @@ def add_landlord():
 def search():
     q = request.params.get("q")
     q_name = q.split()
-    print('q is:', type(q), q)
-    print('q_name is:', type(q_name), len(q_name), q_name)
+    #print('q is:', type(q), q)
+    #print('q_name is:', type(q_name), len(q_name), q_name)
     q_first_name = q_name[0].title()
     not_found = False
     if len(q_name) < 2:
         rows = db(db.landlord.first_name.ilike(q_first_name+'%')).select().as_list()
-        print('rows is:', rows)
+        #print('rows is:', rows)
         if len(rows) == 0:
             not_found = True
     else:
@@ -336,7 +309,7 @@ def search():
                   (db.landlord.last_name.ilike(q_last_name + '%'))).select().as_list()
         if len(rows) == 0:
             not_found = True
-    print('is not found:', not_found)
+    #print('is not found:', not_found)
     """
     print('stripped name is:', q_first_name, q_last_name)
     results_found = False
