@@ -61,6 +61,8 @@ def index():
     else:  # if there is only one landlord populate page with the only landlord twice
         random_landlords = [1, 1]
 
+    print(random_landlords)
+
     example_landlord1 = db.landlord[random_landlords[0]]
     print(example_landlord1)
     example_landlord1_name = example_landlord1.first_name + " " + example_landlord1.last_name

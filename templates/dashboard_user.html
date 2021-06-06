@@ -25,50 +25,66 @@
       <h1 class="title is-5" style="text-align: center;">Your Reviews</h1>
 
       <!--Each review is a section-->
-      <div class="section has-background-info-light block" v-if="r.renter_email == '[[=globals().get('user').get('email')]]'" v-for="r in rows.slice().reverse()">
-        <div class="columns is-mobile is-gapless is-vcentered">
-          <!-- <a :href="r.url"> -->
+      <div class="block" v-for="r in rows.slice().reverse()" v-if="r.renter_email == '[[=globals().get('user').get('email')]]'">
+        <div class="columns is-mobile is-gapless is-vcentered is-multiline">
             <div class="column is-one-fifth">
-                
-              <span class="title p-5 is-italic" style="font-family:'Gill Sans', sans-serif"><u>{{r.reviews_score_overall}}</u></span>
-
-            </div>
-            <div class="column">
-                <span class="p-3">Landlord name: <strong>{{r.landlord_name}}</strong></span><br />
-                <span class="p-3">Property: <strong>{{r.reviews_property_address}}</strong></span><br />
-                <span class="p-3">Responsiveness: <strong>{{r.reviews_score_responsiveness}}/10</strong></span>
-                <span class="p-3">Friendliness: <strong>{{r.reviews_score_friendliness}}/10</strong></span>
-               <!-- <span class="p-3">Would Rent Again: <strong>Yes</strong></span> --> 
-               
-                <div class="section">
-                  <p>{{r.reviews_contents}}</p>
+                <!-- <span class="title p-5" style="font-family:'Gill Sans', sans-serif; background-color:#24e765;">{{r.reviews_score_overall}}</span> -->
+                <div v-if="r.reviews_score_overall >= 7.0">
+                    <span class="title p-5" style="font-family:'Gill Sans', sans-serif; background-color:#24e765;">{{r.reviews_score_overall}}</span>
+                </div>
+                <div v-else-if="r.reviews_score_overall < 4.0">
+                    <span class="title p-5" style="font-family:'Gill Sans', sans-serif; background-color:#f50d0d;">{{r.reviews_score_overall}}</span>
+                </div>
+                <!-- <div v-else-if="r.reviews_score_overall > 7.0 && reviews_score_overall >= 4.0">
+                    <span class="title p-5" style="font-family:'Gill Sans', sans-serif; background-color:#f1ee18;">{{r.reviews_score_overall}}</span>
+                </div> -->
+                <div v-else>
+                    <span class="title p-5" style="font-family:'Gill Sans', sans-serif; background-color:#f1d018;">{{r.reviews_score_overall}}</span>
                 </div>
             </div>
-              
-            <div>
-              <span style="font-size:12px; font-family:'Gill Sans', sans-serif">&nbsp&nbspFound this helpful?</span>
-                    <br>
-                    <span v-for="vote_idx in [1, 2]" @mousehover="votes_hover(r._idx, vote_idx)" @click="set_votes(r._idx, vote_idx)">
-                        <span v-if="vote_idx == 1">
-                            <button :class="{'button is-rounded is-dark': vote_idx == r.voted, 'button is-rounded': vote_idx != r.voted }"><i class="fa fa-arrow-circle-up"></i></button>
-                        </span>
-                        <br><span v-if="vote_idx == 1" style="font-family:'Gill Sans', sans-serif">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{r.count}}</span>
-                        <span v-if="vote_idx == 2">
-                            <button :class="{'button is-rounded is-dark': vote_idx == r.voted, 'button is-rounded': vote_idx != r.voted }"><i class="fa fa-arrow-circle-down"></i></button>
-                        </span>
-                    </span>
 
-                    <br><br>
-                    <button @click="delete_post(r._idx)" class="button is-danger is-rounded" v-if="r.renter_email == '[[=globals().get('user').get('email')]]'">
-                        <i class="fa fa-trash"></i>
-                    </button>
+            <div class="column">
+                <p class="title is-4 has-text-weight-normal">{{r.renter_name}}</p>
+                
+                
+                <p class="content has-text-weight-light">{{r.reviews_contents}}</p>
+               
+                <span class="subtitle is-6"><strong>Landlord name: </strong>{{r.landlord_name}}</span><br>
+                <span class="subtitle is-6"><strong>Property: </strong>{{r.reviews_property_address}}</span><br>
+
+                
+                <span class="subtitle is-6"><strong>Responsiveness: </strong> {{r.reviews_score_responsiveness}}/10</span>
+                <span class="subtitle is-6"><strong>Friendliness: </strong> {{r.reviews_score_friendliness}}/10</span>
+                
+                <div class="block" style="font-size:13px; float: right">
+                  <a :href="r.url">
+                    Go to review&nbsp<i class="icon fas fa-arrow-right"></i>
+                  </a>
+                </div> 
             </div>
+            
+            <div class="section">
+                <span style="font-size:12px; font-family:'Gill Sans', sans-serif">&nbsp&nbspFound this helpful?</span>
+                <br>
+                <span v-for="vote_idx in [1, 2]" @mousehover="votes_hover(r._idx, vote_idx)" @click="set_votes(r._idx, vote_idx)">
+                    <span v-if="vote_idx == 1">
+                        <button :class="{'button is-rounded is-dark': vote_idx == r.voted, 'button is-rounded': vote_idx != r.voted }"><i class="fa fa-arrow-circle-up"></i></button>
+                    </span>
+                    <br><span v-if="vote_idx == 1" style="font-family:'Gill Sans', sans-serif">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{r.count}}</span>
+                    <span v-if="vote_idx == 2">
+                        <button :class="{'button is-rounded is-dark': vote_idx == r.voted, 'button is-rounded': vote_idx != r.voted }"><i class="fa fa-arrow-circle-down"></i></button>
+                    </span>
+                </span>
+
+                <br><br>
+                <button @click="delete_post(r._idx)" class="button is-danger is-rounded" v-if="r.renter_email == '[[=globals().get('user').get('email')]]'">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>              
         </div>
-        <div class="block" style="font-size:13px; float: right">
-          <a :href="r.url">
-            Go to review&nbsp<i class="icon fas fa-arrow-right"></i>
-          </a>
-        </div>
+        
+        <hr>
+    </div>
     </div>
   </div>
 
