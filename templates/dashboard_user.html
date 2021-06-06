@@ -6,26 +6,23 @@
 
   /* a { color: inherit; }  */
 </style>
+<h1 class="title" style="font-size:35px; text-align: center; font-family:'Gill Sans', sans-serif;">Dashboard</h1>
 
 <div class="section" id="vue-target" v-cloak>
-  <div class="section">
-
-    <div class="columns">
-        <div class="column">
-          <h1 class="title" style="text-align: center;">Dashboard</h1>
-          <div class="columns is-mobile">
-            <div class="column">
-              <p class="bd-notification is-info" style="text-align: center;">Name: [[=username]]</p>
-            </div>
-            <div class="column">
-              <p class="bd-notification is-info" style="text-align: center;">Email: [[=email]]</p>
-            </div>
-          </div>
-        </div>
+  <div class="column">
+    <h1 class="title is-5" style="text-align: center;">Your Details</h1>
+    <div class="columns is-mobile">
+      <div class="column">
+        <p class="bd-notification is-info" style="text-align: center;"><strong>Name: </strong>[[=username]]</p>
       </div>
-
+      <div class="column">
+        <p class="bd-notification is-info" style="text-align: center;"><strong>Email: </strong>[[=email]]</p>
+      </div>
+    </div>
+  </div>
+  <div class="section">
       <hr>
-      <h1 class=" title is-4" style="text-align: center;">Your Reviews</h1>
+      <h1 class="title is-5" style="text-align: center;">Your Reviews</h1>
 
       <!--Each review is a section-->
       <div class="section has-background-info-light block" v-if="r.renter_email == '[[=globals().get('user').get('email')]]'" v-for="r in rows.slice().reverse()">
@@ -45,22 +42,32 @@
                
                 <div class="section">
                   <p>{{r.reviews_contents}}</p>
-                  <br>
-                  <button @click="delete_post(r._idx)" class="button is-danger" v-if="r.renter_email == '[[=globals().get('user').get('email')]]'" style="float: right;">
-                      <i class="fa fa-trash"></i>
-                  </button>
-                </div>
-                <div class="block" style="float: right">
-                  <a :href="r.url">
-                    Go to review: 
-                  <span class="icon">
-                    <i class="fas fa-arrow-right"></i>
-                  </span>
-                  </a>
-              </div>
                 </div>
             </div>
-            <!-- <a> -->
+              
+            <div>
+              <span style="font-size:12px; font-family:'Gill Sans', sans-serif">&nbsp&nbspFound this helpful?</span>
+                    <br>
+                    <span v-for="vote_idx in [1, 2]" @mousehover="votes_hover(r._idx, vote_idx)" @click="set_votes(r._idx, vote_idx)">
+                        <span v-if="vote_idx == 1">
+                            <button :class="{'button is-rounded is-dark': vote_idx == r.voted, 'button is-rounded': vote_idx != r.voted }"><i class="fa fa-arrow-circle-up"></i></button>
+                        </span>
+                        <br><span v-if="vote_idx == 1" style="font-family:'Gill Sans', sans-serif">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{r.count}}</span>
+                        <span v-if="vote_idx == 2">
+                            <button :class="{'button is-rounded is-dark': vote_idx == r.voted, 'button is-rounded': vote_idx != r.voted }"><i class="fa fa-arrow-circle-down"></i></button>
+                        </span>
+                    </span>
+
+                    <br><br>
+                    <button @click="delete_post(r._idx)" class="button is-danger is-rounded" v-if="r.renter_email == '[[=globals().get('user').get('email')]]'">
+                        <i class="fa fa-trash"></i>
+                    </button>
+            </div>
+        </div>
+        <div class="block" style="font-size:13px; float: right">
+          <a :href="r.url">
+            Go to review&nbsp<i class="icon fas fa-arrow-right"></i>
+          </a>
         </div>
     </div>
   </div>
@@ -74,6 +81,10 @@
 <script>
     let load_reviews_url = "[[=XML(load_reviews_url)]]";
     let delete_reviews_url = "[[=XML(delete_reviews_url)]]";
+
+    let get_votes_url = "[[=XML(get_votes_url)]]";
+    let set_votes_url = "[[=XML(set_votes_url)]]";
+    let get_voters_url = "[[=XML(get_voters_url)]]";
 </script>
 <script src="js/dashboard_user.js"></script>
 [[end]]

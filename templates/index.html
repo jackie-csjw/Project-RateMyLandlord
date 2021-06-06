@@ -8,17 +8,23 @@ a:before {
     content: '\A';
     white-space: pre;
 }
+.search-results{
+  margin: 0px;
+  padding: 0px;
+  height: 20%;
+  
+}
 </style>
 
 <center><img src="https://i.ibb.co/fXBWB6c/Screen-Shot-2021-05-09-at-8-23-10-PM.png" width="50%"></center>
 <br>
 <div class="" id="vue-target" v-cloak>
   <div class="control block"></div>
-    <!--<h2 class="subtitle is-5 has-text-centered" style="font-family:Gill Sans; color:rgb(93, 97, 102)">Not sure if you should rent that place? Search to find out!</h2>-->
-    <input class="input is-rounded" type="text" placeholder="Landlord's Name / Location" style="font-family:Gill Sans"
+    
+    <input class="input is-rounded" type="text" placeholder="Landlord's Name" style="font-family:Gill Sans"
            v-model="query" @keyup="search">
 
-  <div v-for="r in rows">
+  <div class="search-results" v-for="r in rows">
     <hr>
       <a @click="goto_lord()">{{r.first_name}} {{r.last_name}}</a>
   </div>
@@ -79,10 +85,6 @@ a:before {
     </div>
   </div>
 </div>
-  
-  
-  
-
   
   <!--
   <img src="https://i.ibb.co/vsFBVRy/Screen-Shot-2021-05-09-at-10-24-31-PM.png" width="40%" align="left">

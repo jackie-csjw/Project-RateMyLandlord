@@ -131,6 +131,9 @@ def dashboard_user():
         load_reviews_url=URL('load_reviews', signer=url_signer),
         add_reviews_url=URL('add_reviews', signer=url_signer),
         delete_reviews_url=URL('delete_reviews', signer=url_signer),
+        get_votes_url=URL('get_votes', signer=url_signer),
+        set_votes_url=URL('set_votes', signer=url_signer),
+        get_voters_url=URL('get_voters', signer=url_signer),
     )
  
 

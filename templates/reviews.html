@@ -4,6 +4,13 @@
     [v-cloak] {
          display: none;
     }
+
+    .nav li {
+        display: inline-block;
+        padding: 20px;
+    }
+
+    
 </style>
 
 
@@ -11,33 +18,29 @@
   
     <!--Top Half-->
     <div class="container">
-        <div class="columns is-mobile">
-            <div class="column is-one-third">
-                <!--Pictures & leave review button-->
-                <img src="https://bulma.io/images/placeholders/128x128.png"> 
-                
-            </div>
+        <div class="container">
+            
+                <h4 class="title" style="text-align:center">[[=landlord_name]]</h4>
+          
+                <ul class="nav" style="text-align: center;">
+                    <li><strong>Responsiveness:</strong> [[=avg_resp]]/10</li>
+                    <li><strong>Overall: </strong> [[=avg_overall]]/10</li>
+                    <li><strong>Friendliness: </strong>[[=avg_friend]]/10</li>  
+                  
+                </ul>
         
-            <div class="column">
-                <h4 class="title" style="font-family:'Gill Sans', sans-serif">[[=landlord_name]]</h4>
-                <div class="columns is-mobile">
-                <div class="column">
-                    <!--Rating titles-->
-                    <p class="bd-notification is-info">Overall: </p>
-                    <p class="bd-notification is-info">Responsiveness: </p>
-                    <p class="bd-notification is-info">Friendliness: </p>
-                </div>
-                <div class="column">
-                    <!--Rating values-->
-                    <p class="bd-notification is-info">[[=avg_overall]]/10</p>
-                    <p class="bd-notification is-info">[[=avg_resp]]/10</p>
-                    <p class="bd-notification is-info">[[=avg_friend]]/10</p>
-                </div>
-                </div>
+                
+                   <!-- <div class="block">Overall: [[=avg_overall]]/10</div>
+                    <div class="block">Responsiveness: [[=avg_resp]]/10</div>
+                    <div class="block">Friendliness: [[=avg_friend]]/10</div> -->
+            <div class="has-text-centered">
+                <button class="button is-success block is-rounded has-text-weight-medium" @click="set_add_status(true)">Leave a review</button>
             </div>
-        </div>
+            
 
-        <button class="button is-success block is-rounded has-text-weight-medium" @click="set_add_status(true)">Leave a review</button>
+        </div> <!--End header-->
+
+      
 
         <!--Add review-->
         <div v-if="add_mode" class="container block">
@@ -79,32 +82,27 @@
     <div class="container">
        
         <!--Each review is a section-->
-        <div class="section has-background-info-light block" v-for="r in rows.slice().reverse()" v-if=" r.reviews_landlordID == [[=landlordID]] ">
+        <div class="block" v-for="r in rows.slice().reverse()" v-if=" r.reviews_landlordID == [[=landlordID]] ">
             <div class="columns is-mobile is-gapless is-vcentered is-multiline">
                 <div class="column is-one-fifth">
                     
-                   <span class="title p-5 is-italic" style="font-family:'Gill Sans', sans-serif"><u>{{r.reviews_score_overall}}</u></span>
-                   
-                  <!--<span class="button">
-                    <i class="fas fa-thumbs-up"></i>
-                    </span>
-                    <span class="button">
-                        <i class="fas fa-thumbs-down"></i>
-                    </span>-->
+                   <span class="title p-5" style="font-family:'Gill Sans', sans-serif; background-color:#f5eeed;">{{r.reviews_score_overall}}</span>
 
                 </div>
 
                 <div class="column">
-                    <span class="p-3">Property: <strong>{{r.reviews_property_address}}</strong></span><br />
-                    <span class="p-3">Responsiveness: <strong>{{r.reviews_score_responsiveness}}/10</strong></span>
-                    <span class="p-3">Friendliness: <strong>{{r.reviews_score_friendliness}}/10</strong></span>
+                    <p class="title is-4 has-text-weight-normal">{{r.renter_name}}</p>
+
+                    
+                    <p class="content has-text-weight-light">{{r.reviews_contents}}</p>
                    
-                    <div class="section">
-                        <p>{{r.reviews_contents}}</p>
-                    </div>
 
+                    <span class="subtitle is-6"><strong>Property: </strong>{{r.reviews_property_address}}</span><br>
 
-                    <p>Posted By: {{r.renter_name}}</p>
+                    
+                    <span class="subtitle is-6"><strong>Responsiveness: </strong> {{r.reviews_score_responsiveness}}/10</span>
+                    <span class="subtitle is-6"><strong>Friendliness: </strong> {{r.reviews_score_friendliness}}/10</span>
+                    
                     
                 </div>
                 
@@ -126,7 +124,7 @@
                         <i class="fa fa-trash"></i>
                     </button>
                 </div>               
-            </div>
+            </div><hr>
         </div>
     </div>
 
