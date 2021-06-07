@@ -29,10 +29,6 @@
                   
                 </ul>
         
-                
-                   <!-- <div class="block">Overall: [[=avg_overall]]/10</div>
-                    <div class="block">Responsiveness: [[=avg_resp]]/10</div>
-                    <div class="block">Friendliness: [[=avg_friend]]/10</div> -->
             <div class="has-text-centered">
                 <button class="button is-success block is-rounded has-text-weight-medium" @click="set_add_status(true)">Leave a review</button>
             </div>
@@ -56,7 +52,7 @@
                 </div>
             </div>
             <div class="container block">
-                <!--[[=landlordID]]-->
+             
                 <label for="review_content">Review</label>
                 <textarea class="textarea" v-model="reviews_contents"></textarea>
 
@@ -67,7 +63,7 @@
                 <input id="friend_scale" class="input block" type="range" min="0" max="10" v-model="reviews_score_friendliness" @change="change_f_value">
             </div>
 
-           <!--Reinput ==form here if necessary-->
+          
     
            <input type ="submit" style="font-family:'Gill Sans', sans-serif" class="button is-success is-rounded has-text-weight-medium" @click="add_post" value="Submit">
            <input type ="submit" style="font-family:'Gill Sans', sans-serif" class="button is-warning is-rounded has-text-weight-medium" @click="set_add_status(false)" value="Cancel">
@@ -85,16 +81,13 @@
         <div class="block" v-for="r in rows.slice().reverse()" v-if=" r.reviews_landlordID == [[=landlordID]] ">
             <div class="columns is-mobile is-gapless is-vcentered is-multiline">
                 <div class="column is-one-fifth">
-                    <!-- <span class="title p-5" style="font-family:'Gill Sans', sans-serif; background-color:#24e765;">{{r.reviews_score_overall}}</span> -->
                     <div v-if="r.reviews_score_overall >= 7.0">
                         <span class="title p-5" style="font-family:'Gill Sans', sans-serif; background-color:#24e765;">{{r.reviews_score_overall}}</span>
                     </div>
                     <div v-else-if="r.reviews_score_overall < 4.0">
                         <span class="title p-5" style="font-family:'Gill Sans', sans-serif; background-color:#f50d0d;">{{r.reviews_score_overall}}</span>
                     </div>
-                    <!-- <div v-else-if="r.reviews_score_overall > 7.0 && reviews_score_overall >= 4.0">
-                        <span class="title p-5" style="font-family:'Gill Sans', sans-serif; background-color:#f1ee18;">{{r.reviews_score_overall}}</span>
-                    </div> -->
+                 
                     <div v-else>
                         <span class="title p-5" style="font-family:'Gill Sans', sans-serif; background-color:#f1d018;">{{r.reviews_score_overall}}</span>
                     </div>

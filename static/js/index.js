@@ -37,14 +37,7 @@ let init = (app) => {
     };
 
     app.goto_lord = function (){
-       /* let l = app.vue.rows[r_idx];
-        console.log(r_idx);
-        console.log(app.vue.rows);
-        axios.get(get_search_url_url, {params: {lord_id: l.id}})
-            .then(function(r){
-                console.log("here");
-                window.location = r.data.url;
-            });*/
+       
 
         for(let i = 0; i < app.vue.rows.length; i++){
             let l = app.vue.rows[i];
@@ -65,7 +58,7 @@ let init = (app) => {
         // Complete as you see fit.
         search: app.search,
         goto_lord: app.goto_lord
-       // link_to: link_to,
+       
     };
 
     // This creates the Vue instance.
@@ -77,11 +70,7 @@ let init = (app) => {
 
     // And this initializes it.
     app.init = () => {
-        // Put here any initialization code.
-        // Typically this is a server GET call to load the data.
-       /* axios.get(load_reviews_url).then(function (response) {
-            app.vue.rows = app.enumerate(response.data.rows);
-        }); */
+    
     };
 
     // Call to the initializer.

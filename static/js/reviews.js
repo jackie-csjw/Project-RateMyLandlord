@@ -45,26 +45,7 @@ let init = (app) => {
     app.set_add_status = function(new_status){
         var x = document.getElementById("plus");
         app.vue.add_mode = new_status;
-        /*if(new_status == true){
-            x.style.visibility = 'hidden';
-        }
-        else{
-            x.style.visibility = 'visible';
-        }*/
-        //app.vue.init_autofill();
-    
-
-        /*let input = document.getElementById('searchTextField');
-        let autocomplete = new google.maps.places.Autocomplete(input);
-        google.maps.event.addListener(autocomplete, 'place_changed', function () {
-            var place = autocomplete.getPlace();
-            document.getElementById('city2').value = place.name;
-            document.getElementById('cityLat').value = place.geometry.location.lat();
-            document.getElementById('cityLng').value = place.geometry.location.lng();
-        });
-
-        google.maps.event.addDomListener(window, 'load', initialize); */
-       
+     
     };
 
     app.add_post = function(){
@@ -112,17 +93,6 @@ let init = (app) => {
         });
     }
 
-    /*app.init_autofill = function(){
-        var input = document.getElementById('searchTextField');
-        var autocomplete = new google.maps.places.Autocomplete(input);
-        google.maps.event.addListener(autocomplete, 'place_changed', function () {
-            var place = autocomplete.getPlace();
-            document.getElementById('city2').value = place.name;
-            document.getElementById('cityLat').value = place.geometry.location.lat();
-            document.getElementById('cityLng').value = place.geometry.location.lng();
-        });
-        google.maps.event.addDomListener(window, 'load', initialize);
-    }*/
 
     app.change_r_value = function(){
         let slider = document.getElementById("rep_scale");
@@ -184,7 +154,6 @@ let init = (app) => {
         reset_form: app.reset_form,
         set_add_status: app.set_add_status,
         delete_post: app.delete_post,
-       // init_autofill: app.init_autofill,
         change_r_value: app.change_r_value,
         change_f_value: app.change_f_value,
 

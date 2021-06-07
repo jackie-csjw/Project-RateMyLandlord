@@ -42,11 +42,6 @@ lord_id = 0
 @action('index', method=["GET", "POST"])
 @action.uses(db, auth, 'index.html')
 def index():
-    auth = Auth(session, db, extra_fields=[
-        Field('user_type', requires=IS_IN_SET("Renter", "Landlord"))
-    ])
-    user = auth.get_user()
-    message = T("Hello {first_name}".format(**user) if user else "Hello")
     
     landlord_list = db(db.landlord.id).select().as_list()
     id_list = []
@@ -77,13 +72,8 @@ def index():
         (db.reviews.reviews_landlordID == random_landlords[1])
     ).select().sort(lambda row: random.random()).first()
 
-    form = Form(db.landlord, csrf_session=session, formstyle=FormStyleBulma)
-    if form.accepted:
-        id = form.vars['id']
-        redirect(URL('reviews', id))
 
     return dict(
-        message=message,
         load_reviews_url=URL('load_reviews', signer=url_signer),
         add_reviews_url=URL('add_reviews', signer=url_signer),
         delete_reviews_url=URL('delete_reviews', signer=url_signer),
@@ -94,7 +84,6 @@ def index():
         example_landlord2_id=random_landlords[1],
         rows1=rows1,
         rows2=rows2,
-        form=form,
         get_votes_url=URL('get_votes', signer=url_signer),
         set_votes_url=URL('set_votes', signer=url_signer),
         get_voters_url=URL('get_voters', signer=url_signer),
@@ -205,7 +194,6 @@ def add_reviews():
     renter_id = renter.id if renter is not None else "Unknown"
     renter_email = renter.email
     reviews_landlordID = int(session.get('landlordID', None))
-    #reviews_landlordID = request.json.get('reviews_landlordID')
     reviews_score_friendliness = int(request.json.get('reviews_score_friendliness'))
     reviews_score_responsiveness = int(request.json.get('reviews_score_responsiveness'))
     reviews_property_address = request.json.get('reviews_property_address')
@@ -299,13 +287,10 @@ def get_voters():
 def search():
     q = request.params.get("q")
     q_name = q.split()
-    #print('q is:', type(q), q)
-    #print('q_name is:', type(q_name), len(q_name), q_name)
     q_first_name = q_name[0].title()
     not_found = False
     if len(q_name) < 2:
         rows = db(db.landlord.first_name.ilike(q_first_name+'%')).select().as_list()
-        #print('rows is:', rows)
         if len(rows) == 0:
             not_found = True
     else:
@@ -314,29 +299,8 @@ def search():
                   (db.landlord.last_name.ilike(q_last_name + '%'))).select().as_list()
         if len(rows) == 0:
             not_found = True
-    #print('is not found:', not_found)
-    """
-    print('stripped name is:', q_first_name, q_last_name)
-    results_found = False
-    results = 0
-    for row in db(db.landlord.first_name == q_first_name).select():
-        print('found', type(row), row)
-        print('row.id', row.id)
-        results = [{row.first_name + " " + row.last_name}, {row.id}]
-        print(results)
-        results_found = True
-    if results_found is False:
-        results = 'Not Found'
-    """
-    # rows = db(db.landlord.first_name.ilike(q_first_name+'%')).select().as_list()
     return dict(rows=rows, not_found=not_found)
 
-
-
-    # if
-    # results = db(db.landlord).select().as_list()
-    # results = ['name']
-    # results = [q + ":" + str(uuid.uuid1()) for _ in range(random.randint(2, 6))]
 
 
 @action('get_search_url')
@@ -344,139 +308,3 @@ def search():
 def get_search_url():
     lord_id = int(request.params.get('lord_id'))
     return dict(url=URL('reviews', lord_id))
-
-# @action("signup", method=["GET", "POST"])
-# @action.uses(db, session, auth, 'signup.html')
-# def signup():
-#     form = Form(auth, csrf_session=session, formstyle=FormStyleBulma)
-#     if form.accepted:
-#         # We simply redirect; the insertion already happened.
-#         # username = form.vars['reviews_username']
-#         # db(db.reviews.reviews_username == username).update(username=username)
-#         redirect(URL('index'))
-#     # Either this is a GET request, or this is a POST but not accepted = with errors.
-#     return dict(form=form)
-
-
-# @action('add_review', method=["GET", "POST"])
-# @action.uses(db, session, auth.user, 'add_review.html')
-# def add_review():
-#     form = Form(db.reviews, csrf_session=session, formstyle=FormStyleBulma)
-#     if form.accepted:
-#         # We simply redirect; the insertion already happened.
-#         # username = form.vars['reviews_username']
-#         # db(db.reviews.reviews_username == username).update(username=username)
-#         redirect(URL('index'))
-#     # Either this is a GET request, or this is a POST but not accepted = with errors.
-#     return dict(form=form)
-
-
-# @action('add_address', method=["GET", "POST"])
-# @action.uses(db, session, auth.user, 'add_review.html')
-# def add_address():
-#     form = Form(db.reviews, csrf_session=session, formstyle=FormStyleBulma)
-#     if form.accepted:
-#         # We simply redirect; the insertion already happened.
-#         # username = form.vars['reviews_username']
-#         # db(db.reviews.reviews_username == username).update(username=username)
-#         redirect(URL('index'))
-#     # Either this is a GET request, or this is a POST but not accepted = with errors.
-#     return dict(form=form)
-
-
-# ----------------------------------------thumbs up/down code, uncomment when ready
-# @action("get_thumbs_up")
-# @action.uses(url_signer.verify(), db)
-# def get_thumbs_up():
-#     rows = db((db.thumbs_up.each_review == request.params.get('id')) &
-#               (db.thumbs_up.rater == get_user())).select().as_list()
-#     if len(rows) == 0:
-#         up = 0
-#     else:
-#         up = int(rows[0]['up'])
-#     return dict(up=up)
-#
-#
-# @action("get_thumbs_down")
-# @action.uses(url_signer.verify(), db)
-# def get_thumbs_down():
-#     rows = db((db.thumbs_down.each_review == request.params.get('id')) &
-#               (db.thumbs_down.rater == get_user())).select().as_list()
-#     if len(rows) == 0:
-#         down = 0
-#     else:
-#         down = int(rows[0]['down'])
-#     return dict(down=down)
-#
-#
-# @action("set_thumbs_up", method="POST")
-# @action.uses(url_signer.verify(), db)
-# def set_thumbs_up():
-#     id = request.json.get('id')
-#     up = int(request.json.get('up'))
-#
-#     if up == 1:
-#         db.thumbs_up.update_or_insert(
-#             ((db.thumbs_up.each_review == id) & (db.thumbs_up.rater == get_user())),
-#             each_post=id,
-#             rater=get_user(),
-#             up=up
-#         )
-#         db((db.thumbs_down.each_review == id) & (db.thumbs_down.rater == get_user())).delete()
-#     else:
-#         db((db.thumbs_up.each_review == id) & (db.thumbs_up.rater == get_user())).delete()
-#     return "ok"
-#
-#
-# @action("set_thumbs_down", method="POST")
-# @action.uses(url_signer.verify(), db)
-# def set_thumbs_down():
-#     id = request.json.get('id')
-#     down = int(request.json.get('down'))
-#
-#     if down == 1:
-#         db.thumbs_down.update_or_insert(
-#             ((db.thumbs_down.each_review == id) & (db.thumbs_down.rater == get_user())),
-#             each_post=id,
-#             rater=get_user(),
-#             down=int(request.json.get('down'))
-#         )
-#         db((db.thumbs_up.each_review == id) & (db.thumbs_up.rater == get_user())).delete()
-#     else:
-#         db((db.thumbs_down.each_review == id) & (db.thumbs_down.rater == get_user())).delete()
-#     return "ok"
-#
-#
-# @action("get_thumbs_up_list")
-# @action.uses(url_signer.verify(), db)
-# def get_thumbs_up_list():
-#     row_index = int(request.params.row_idx)
-#     rows = db(db.thumbs_up.each_review == row_index).select().as_list()
-#     list_up = []
-#     for r in rows:
-#         userId = r['rater']
-#         row2 = db(db.auth_user.id == userId).select().as_list()
-#         list_up.append(row2[0]['first_name'] + " " + row2[0]['last_name'])
-#
-#     final_name = ", ".join(k for k in list_up)
-#     if final_name != "":
-#         final_name = "Liked by " + final_name
-#
-#     return dict(final_name=final_name)
-#
-#
-# @action("get_thumbs_down_list")
-# @action.uses(url_signer.verify(), db)
-# def get_thumbs_down_list():
-#     row_index = int(request.params.row_idx)
-#     rows = db(db.thumbs_down.each_review == row_index).select().as_list()
-#     list_up = []
-#     for r in rows:
-#         userId = r['rater']
-#         row2 = db(db.auth_user.id == userId).select().as_list()
-#         list_up.append(row2[0]['first_name'] + " " + row2[0]['last_name'])
-#
-#     final_name = ", ".join(k for k in list_up)
-#     if final_name != "":
-#         final_name = "Disliked by " + final_name
-#     return dict(final_name=final_name)
